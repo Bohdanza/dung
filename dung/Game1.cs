@@ -61,28 +61,11 @@ namespace dung
 
             testworld.update(Content);
 
-            fpsc.Update(gameTime);
-
             KeyboardState ks = Keyboard.GetState();
 
-            if (ks.IsKeyDown(Keys.W))
+            if (ks.IsKeyDown(Keys.LeftAlt)&&ks.IsKeyDown(Keys.F1))
             {
-                tmpy += 10;
-            }
-
-            if (ks.IsKeyDown(Keys.S))
-            {
-                tmpy -= 10;
-            }
-
-            if (ks.IsKeyDown(Keys.A))
-            {
-                tmpx += 10;
-            }
-
-            if (ks.IsKeyDown(Keys.D))
-            {
-                tmpx -= 10;
+                fpsc.Update(gameTime);
             }
 
             base.Update(gameTime);
@@ -96,7 +79,13 @@ namespace dung
 
             testworld.draw(_spriteBatch, tmpx, tmpy);
 
-            fpsc.DrawFps(_spriteBatch, tmpfont, new Vector2(0, 0), Color.White);
+
+            KeyboardState ks = Keyboard.GetState();
+
+            if (ks.IsKeyDown(Keys.LeftAlt) && ks.IsKeyDown(Keys.F1))
+            {
+                fpsc.DrawFps(_spriteBatch, tmpfont, new Vector2(0, 0), Color.White);
+            }
 
             _spriteBatch.End();
 

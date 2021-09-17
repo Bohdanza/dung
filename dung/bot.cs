@@ -129,7 +129,7 @@ namespace dung
 
         public override void Draw(SpriteBatch spriteBatch, int x, int y)
         {
-            spriteBatch.Draw(Textures[texturePhase], new Vector2(x-Textures[texturePhase].Width/2, y /*- Textures[texturePhase].Height*/), Color.White);
+            spriteBatch.Draw(Textures[texturePhase], new Vector2(x-Textures[texturePhase].Width/2, y - Textures[texturePhase].Height), Color.White);
         }
 
         private Tuple<int, int> getCoordsInDirection(int direction, int x, int y, int addDirection)

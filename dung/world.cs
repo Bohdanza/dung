@@ -17,6 +17,7 @@ namespace dung
         const int blockDrawY = 42, BlockWidth = 64;
         private Texture2D darknessEffect;
         private List<MapObject> mapObjects;
+        private MapObject referenceToHero;
 
         public GameWorld(ContentManager contentManager)
         {
@@ -33,7 +34,7 @@ namespace dung
 
             DungeonSynthesizer ds = new DungeonSynthesizer(contentManager, 960, 960);
 
-            ds.RandomSeeds(50, 75, 20);
+            ds.RandomSeeds(200, 250, 15);
             ds.GenerateCorridors(250, 1000);
             ds.ReplaceRooms(11, 11);
             ds.PlaceWalls();
@@ -58,6 +59,10 @@ namespace dung
             {
                 mapObjects.Add(new Robot(0, contentManager, ds.rooms[i].Item1+6, ds.rooms[i].Item2));
             }
+
+            mapObjects.Add(new Hero(contentManager, ds.rooms[0].Item1, ds.rooms[0].Item2));
+
+            referenceToHero = mapObjects[mapObjects.Count - 1];
         }
 
         //TODO:
@@ -91,8 +96,14 @@ namespace dung
 
         public void draw(SpriteBatch spriteBatch, int x, int y)
         {
-            int startx = x / blocks[0][0].textures[0].Width, endx = startx*-1 + 1920 / blocks[0][0].textures[0].Width, starty = y / blockDrawY, endy = starty*-1 + 1080 / blockDrawY;
-            
+            int tmpx = -(int)(referenceToHero.X * BlockWidth);
+            int tmpy = -(int)(referenceToHero.Y * blockDrawY);
+
+            int drawx = tmpx + x + 960;
+            int drawy = tmpy + y + 540;
+
+            int startx = drawx / blocks[0][0].textures[0].Width, endx = startx * -1 + 1920 / blocks[0][0].textures[0].Width, starty = drawy / blockDrawY, endy = starty * -1 + 1080 / blockDrawY;
+
             startx *= -1;
             starty *= -1;
 
@@ -112,7 +123,7 @@ namespace dung
                 {
                     l = 0;
 
-                    mapObjects[mapObjectsJ].Draw(spriteBatch, x+(int)(mapObjects[mapObjectsJ].X * BlockWidth), y+(int)(mapObjects[mapObjectsJ].Y * blockDrawY));
+                    mapObjects[mapObjectsJ].Draw(spriteBatch, drawx + (int)(mapObjects[mapObjectsJ].X * BlockWidth), drawy + (int)(mapObjects[mapObjectsJ].Y * blockDrawY));
 
                     mapObjectsJ++;
                 }
@@ -122,7 +133,7 @@ namespace dung
                     {
                         if (blocks[i][j].type != 0)
                         {
-                            blocks[i][j].draw(spriteBatch, x + i * blocks[i][j].textures[0].Width, y + j * blockDrawY);
+                            blocks[i][j].draw(spriteBatch, drawx + i * blocks[i][j].textures[0].Width + BlockWidth / 2, drawy + j * blockDrawY - blockDrawY);
                         }
                     }
                 }
