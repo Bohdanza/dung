@@ -23,8 +23,7 @@ namespace dung
         public int Direction { get; private set; }
 
         private int texturePhase;
-        private double previousX, previousY;
-
+        
         /// <summary>
         /// With file reading
         /// </summary>
@@ -34,9 +33,6 @@ namespace dung
 
             X = x;
             Y = y;
-
-            previousX = x;
-            previousY = y;
 
             Action = "id";
             Direction = 0;
@@ -55,9 +51,6 @@ namespace dung
 
             X = x;
             Y = y;
-
-            previousX = x;
-            previousY = y;
 
             Action = "no";
             Direction = 0;
@@ -87,15 +80,17 @@ namespace dung
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld)
         {
+            double previousX = X, previousY = Y;
+
+            Tuple<double, double> newCoords = addToCoords(X, Y, 0.1, Direction);
+
+            X = newCoords.Item1;
+            Y = newCoords.Item2;
+
             Tuple<int, int> leftcoords = getCoordsInDirection(Direction, (int)X, (int)Y, -1);
 
             if (leftcoords.Item1 < 0 || leftcoords.Item2 < 0 || leftcoords.Item1 >= gameWorld.blocks.Count || leftcoords.Item2 >= gameWorld.blocks[leftcoords.Item1].Count || !gameWorld.blocks[leftcoords.Item1][leftcoords.Item2].passable)
             {
-                Tuple<double, double> newCoords = addToCoords(X, Y, 0.1, Direction);
-
-                X = newCoords.Item1;
-                Y = newCoords.Item2;
-
                 if ((int)X != (int)previousX || (int)Y != (int)previousY)
                 {
                     if (X < 0 || Y < 0 || X >= gameWorld.blocks.Count || Y >= gameWorld.blocks[(int)X].Count || !gameWorld.blocks[(int)X][(int)Y].passable)
@@ -111,7 +106,7 @@ namespace dung
             {
                 Direction--;
 
-                Tuple<double, double> newCoords = addToCoords(X, Y, 0.1, Direction);
+                newCoords = addToCoords(X, Y, 0.1, Direction);
                 
                 X = newCoords.Item1;
                 Y = newCoords.Item2;
