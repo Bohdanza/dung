@@ -23,6 +23,7 @@ namespace dung
         public int Direction { get; private set; }
 
         private int texturePhase;
+        private double previousX, previousY;
 
         /// <summary>
         /// With file reading
@@ -33,6 +34,9 @@ namespace dung
 
             X = x;
             Y = y;
+
+            previousX = x;
+            previousY = y;
 
             Action = "id";
             Direction = 0;
@@ -51,6 +55,9 @@ namespace dung
 
             X = x;
             Y = y;
+
+            previousX = x;
+            previousY = y;
 
             Action = "no";
             Direction = 0;
@@ -82,14 +89,52 @@ namespace dung
         {
             Tuple<int, int> leftcoords = getCoordsInDirection(Direction, (int)X, (int)Y, -1);
 
-            
+            if (leftcoords.Item1 < 0 || leftcoords.Item2 < 0 || leftcoords.Item1 >= gameWorld.blocks.Count || leftcoords.Item2 >= gameWorld.blocks[leftcoords.Item1].Count || !gameWorld.blocks[leftcoords.Item1][leftcoords.Item2].passable)
+            {
+                Tuple<double, double> newCoords = addToCoords(X, Y, 0.1, Direction);
+
+                X = newCoords.Item1;
+                Y = newCoords.Item2;
+
+                if ((int)X != (int)previousX || (int)Y != (int)previousY)
+                {
+                    if (X < 0 || Y < 0 || X >= gameWorld.blocks.Count || Y >= gameWorld.blocks[(int)X].Count || !gameWorld.blocks[(int)X][(int)Y].passable)
+                    {
+                        X = previousX;
+                        Y = previousY;
+
+                        Direction++;
+                    }
+                }
+            }
+            else
+            {
+                Direction--;
+
+                Tuple<double, double> newCoords = addToCoords(X, Y, 0.1, Direction);
+                
+                X = newCoords.Item1;
+                Y = newCoords.Item2;
+            }
+
+            if (Direction < 0)
+            {
+                Direction = 4 - (Direction * -1 % 4);
+            }
+            else
+            {
+                Direction %= 4;
+            }
+
+            previousX = X;
+            previousY = Y;
 
             UpdateTexture(contentManager, false);
         }
 
         public override void Draw(SpriteBatch spriteBatch, int x, int y)
         {
-            spriteBatch.Draw(Textures[texturePhase], new Vector2(x, y - Textures[texturePhase].Height), Color.White);
+            spriteBatch.Draw(Textures[texturePhase], new Vector2(x-Textures[texturePhase].Width/2, y /*- Textures[texturePhase].Height*/), Color.White);
         }
 
         private Tuple<int, int> getCoordsInDirection(int direction, int x, int y, int addDirection)

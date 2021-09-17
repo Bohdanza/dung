@@ -59,6 +59,8 @@ namespace dung
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            testworld.update(Content);
+
             fpsc.Update(gameTime);
 
             KeyboardState ks = Keyboard.GetState();

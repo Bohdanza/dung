@@ -24,8 +24,6 @@ namespace dung
 
             mapObjects = new List<MapObject>();
 
-            mapObjects.Add(new Robot(0, contentManager, 0, 0));
-
             List<Block> sampleBlocks = new List<Block>();
 
             for (int i = 0; i < 3; i++)
@@ -55,6 +53,11 @@ namespace dung
 
                 blocks.Add(tmpblock);
             }
+
+            for(int i=0; i<ds.rooms.Count; i++)
+            {
+                mapObjects.Add(new Robot(0, contentManager, ds.rooms[i].Item1+6, ds.rooms[i].Item2));
+            }
         }
 
         //TODO:
@@ -70,13 +73,20 @@ namespace dung
 
         public void update(ContentManager contentManager)
         {
-            for (int i = 0; i < blocks.Count; i++)
+            mapObjects.Sort((a, b) => a.Y.CompareTo(b.Y));
+
+            for(int i=0; i<mapObjects.Count; i++)
+            {
+                mapObjects[i].Update(contentManager, this);
+            }
+
+            /*for (int i = 0; i < blocks.Count; i++)
             {
                 for (int j = 0; j < blocks[i].Count; j++)
                 {
                     blocks[i][j].update(contentManager);
                 }
-            }
+            }*/
         }
 
         public void draw(SpriteBatch spriteBatch, int x, int y)
