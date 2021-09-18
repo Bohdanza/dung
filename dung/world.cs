@@ -102,7 +102,7 @@ namespace dung
             int drawx = tmpx + x + 960;
             int drawy = tmpy + y + 540;
 
-            int startx = drawx / blocks[0][0].textures[0].Width, endx = startx * -1 + 1920 / blocks[0][0].textures[0].Width, starty = drawy / blockDrawY, endy = starty * -1 + 1080 / blockDrawY;
+            int startx = drawx / blocks[0][0].textures[0].Width, endx = startx * -1 + 1920 / blocks[0][0].textures[0].Width, starty = drawy / blockDrawY, endy = starty * -1 + 1080 / blockDrawY + 1;
 
             startx *= -1;
             starty *= -1;
@@ -140,7 +140,7 @@ namespace dung
             }
 
             //effects
-            //spriteBatch.Draw(darknessEffect, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(darknessEffect, new Vector2(0, 0), Color.White);
         }
     }
 }
