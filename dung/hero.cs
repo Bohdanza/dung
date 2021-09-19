@@ -40,7 +40,10 @@ namespace dung
 
         public override void Draw(SpriteBatch spriteBatch, int x, int y)
         {
-            spriteBatch.Draw(Textures[texturesPhase], new Vector2(x, y-Textures[texturesPhase].Height), Color.White);
+            //dont touch ANYTHING
+            //Can U hear me?
+            //U don't want to see what would happen, trust me
+            spriteBatch.Draw(Textures[texturesPhase], new Vector2(x - Textures[texturesPhase].Width / 2, y - Textures[texturesPhase].Height), Color.White);
         }
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld)

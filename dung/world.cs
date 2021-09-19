@@ -63,6 +63,14 @@ namespace dung
             mapObjects.Add(new Hero(contentManager, ds.rooms[0].Item1, ds.rooms[0].Item2));
 
             referenceToHero = mapObjects[mapObjects.Count - 1];
+
+            for (int i = 0; i < ds.rooms.Count; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    mapObjects.Add(new Ghost(contentManager, 0, ds.rooms[i].Item1, ds.rooms[i].Item2));
+                }    
+            }
         }
 
         //TODO:
@@ -133,7 +141,7 @@ namespace dung
                     {
                         if (blocks[i][j].type != 0)
                         {
-                            blocks[i][j].draw(spriteBatch, drawx + i * blocks[i][j].textures[0].Width + BlockWidth / 2, drawy + j * blockDrawY - blockDrawY);
+                            blocks[i][j].draw(spriteBatch, drawx + i * blocks[i][j].textures[0].Width, drawy + j * blockDrawY - blockDrawY);
                         }
                     }
                 }
