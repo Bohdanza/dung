@@ -21,7 +21,8 @@ namespace dung
         private string direction;
         private double degDirection, speed;
 
-        private int texturePhase;
+        private int texturePhase, timeSinceLastAttack, attackSpeed;
+        public override double Radius { get; protected set; }
 
         public Ghost(ContentManager contentManager, int type, double x, double y)
         {
@@ -35,6 +36,11 @@ namespace dung
 
             X = x;
             Y = y;
+
+            Radius = 0.5;
+
+            timeSinceLastAttack = 0;
+            attackSpeed = 500;
 
             updateTexture(contentManager, true);
         }
@@ -51,6 +57,11 @@ namespace dung
 
             X = x;
             Y = y;
+
+            Radius = 0.5;
+
+            timeSinceLastAttack = 0;
+            attackSpeed = 500;
 
             updateTexture(contentManager, true);
         }
@@ -69,6 +80,8 @@ namespace dung
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld)
         {
+            timeSinceLastAttack++;
+
             double px = X;
             double py = Y;
 
@@ -126,6 +139,15 @@ namespace dung
 
                 //constant shit
                 degDirection += 1.57079633;
+            }
+
+            double tmpdist = gameWorld.GetDist(X, Y, gameWorld.referenceToHero.X, gameWorld.referenceToHero.Y);
+
+            if (timeSinceLastAttack >= attackSpeed && tmpdist <= Radius + gameWorld.referenceToHero.Radius)
+            {
+                timeSinceLastAttack = 0;
+
+                gameWorld.referenceToHero.Attack(1);
             }
 
             updateTexture(contentManager, false);

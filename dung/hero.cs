@@ -20,11 +20,24 @@ namespace dung
         public override List<Texture2D> Textures { get; protected set; }
         const double speed = 0.1;
         private int texturesPhase;
+        public override double Radius { get; protected set; }
+        public int HP { get; protected set; }
+
+        private Texture2D hpHeart;
+        private SpriteFont hpFont;
 
         public Hero(ContentManager contentManager, double x, double y)
         {
             X = x;
             Y = y;
+
+            Radius = 0.5;
+
+            HP = 3;
+
+            hpHeart = contentManager.Load<Texture2D>("hpheart");
+
+            hpFont = contentManager.Load<SpriteFont>("hpfont");
 
             UpdateTextures(contentManager, true);
         }
@@ -44,6 +57,16 @@ namespace dung
             //Can U hear me?
             //U don't want to see what would happen, trust me
             spriteBatch.Draw(Textures[texturesPhase], new Vector2(x - Textures[texturesPhase].Width / 2, y - Textures[texturesPhase].Height), Color.White);
+        }
+
+        public void DrawInterface(SpriteBatch spriteBatch)
+        {
+            for (int i = 0; i < HP; i++)
+            {
+                spriteBatch.Draw(hpHeart, new Vector2((int)(15+i*hpHeart.Width*1.1), 35), Color.White);
+            }
+
+            spriteBatch.DrawString(hpFont, HP.ToString(), new Vector2(15, (int)(35+hpHeart.Height*1.3)), Color.White);
         }
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld)
@@ -80,6 +103,16 @@ namespace dung
                     X = px;
                     Y = py;
                 }
+            }
+        }
+
+        public override void Attack(int strenght)
+        {
+            HP -= strenght;
+
+            if (HP < 0)
+            {
+                HP = 0;
             }
         }
     }

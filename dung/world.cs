@@ -17,7 +17,7 @@ namespace dung
         const int blockDrawY = 42, BlockWidth = 64;
         private Texture2D darknessEffect;
         private List<MapObject> mapObjects;
-        private MapObject referenceToHero;
+        public MapObject referenceToHero { get; private set; }
 
         public GameWorld(ContentManager contentManager)
         {
@@ -55,16 +55,16 @@ namespace dung
                 blocks.Add(tmpblock);
             }
 
-            for(int i=0; i<ds.rooms.Count; i++)
+            /*for(int i=0; i<ds.rooms.Count; i++)
             {
                 mapObjects.Add(new Robot(0, contentManager, ds.rooms[i].Item1+6, ds.rooms[i].Item2));
-            }
+            }*/
 
             mapObjects.Add(new Hero(contentManager, ds.rooms[0].Item1, ds.rooms[0].Item2));
 
             referenceToHero = mapObjects[mapObjects.Count - 1];
 
-            for (int i = 0; i < ds.rooms.Count; i++)
+            for (int i = 1; i < ds.rooms.Count; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
@@ -149,6 +149,42 @@ namespace dung
 
             //effects
             spriteBatch.Draw(darknessEffect, new Vector2(0, 0), Color.White);
+
+            //hero hp, inventory & other
+            ((Hero)referenceToHero).DrawInterface(spriteBatch);
+        }
+
+        public double GetDist(double x, double y, double x1, double y1)
+        {
+            double a = Math.Abs(x - x1);
+            double b = Math.Abs(y - y1);
+
+            return Math.Sqrt(a * a + b * b);
+        }
+
+        public MapObject GetClosestObject(double x, double y, int indexToIgnore)
+        {
+            int mi = 0;
+            double md = -1;
+
+            for (int i = 0; i < mapObjects.Count; i++)
+            {
+                double tmpd = this.GetDist(x, y, mapObjects[i].X, mapObjects[i].Y);
+
+                if (tmpd < md)
+                {
+                    mi = i;
+
+                    md = tmpd;
+                }
+            }
+
+            if(md>-1)
+            {
+                return mapObjects[mi];
+            }
+
+            return null;
         }
     }
 }

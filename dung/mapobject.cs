@@ -20,13 +20,25 @@ namespace dung
 
         public virtual string Action { get; protected set; }
         public virtual List<Texture2D> Textures { get; protected set; }
+        protected virtual bool isInfected { get; set; } = false;
+        public virtual double Radius { get; protected set; }
 
         public virtual void Update(ContentManager contentManager, GameWorld gameWorld)
+        {
+            
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch, int x, int y)
         {
 
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, int x, int y)
+        public virtual void Infect()
+        {
+
+        }
+
+        public virtual void Attack(int strenght)
         {
 
         }

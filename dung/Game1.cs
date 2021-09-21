@@ -36,6 +36,8 @@ namespace dung
             this.IsFixedTimeStep = true;
             this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
             _graphics.ApplyChanges();
+
+            this.Window.IsBorderless = true;
         }
 
         protected override void Initialize()
