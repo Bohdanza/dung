@@ -22,6 +22,7 @@ namespace dung
         public virtual List<Texture2D> Textures { get; protected set; }
         protected virtual bool isInfected { get; set; } = false;
         public virtual double Radius { get; protected set; }
+        public virtual int HP { get; protected set; }
 
         public virtual void Update(ContentManager contentManager, GameWorld gameWorld)
         {

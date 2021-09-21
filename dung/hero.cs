@@ -21,7 +21,7 @@ namespace dung
         const double speed = 0.1;
         private int texturesPhase;
         public override double Radius { get; protected set; }
-        public int HP { get; protected set; }
+        public override int HP { get; protected set; }
 
         private Texture2D hpHeart;
         private SpriteFont hpFont;

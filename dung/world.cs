@@ -64,9 +64,13 @@ namespace dung
 
             referenceToHero = mapObjects[mapObjects.Count - 1];
 
+            var rnd = new Random();
+
             for (int i = 1; i < ds.rooms.Count; i++)
             {
-                for (int j = 0; j < 5; j++)
+                int tmpc = rnd.Next(2, 15);
+
+                for (int j = 0; j < tmpc; j++)
                 {
                     mapObjects.Add(new Ghost(contentManager, 0, ds.rooms[i].Item1, ds.rooms[i].Item2));
                 }    
