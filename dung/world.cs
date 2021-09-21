@@ -18,6 +18,8 @@ namespace dung
         private Texture2D darknessEffect;
         private List<MapObject> mapObjects;
         public MapObject referenceToHero { get; private set; }
+        public List<Block> sampleBlocks { get; private set; } = new List<Block>();
+        public List<Ghost> sampleGhosts { get; private set; } = new List<Ghost>();
 
         public GameWorld(ContentManager contentManager)
         {
@@ -25,13 +27,17 @@ namespace dung
 
             mapObjects = new List<MapObject>();
 
-            List<Block> sampleBlocks = new List<Block>();
-
             for (int i = 0; i < 3; i++)
             {
                 sampleBlocks.Add(new Block(i, 0, 0, contentManager));
             }
+            
+            for (int i = 0; i < 1; i++)
+            {
+                sampleGhosts.Add(new Ghost(contentManager, i, 0, 0));
+            }
 
+            //generating main dungeon
             DungeonSynthesizer ds = new DungeonSynthesizer(contentManager, 960, 960);
 
             ds.RandomSeeds(200, 250, 15);
@@ -55,6 +61,7 @@ namespace dung
                 blocks.Add(tmpblock);
             }
 
+            //generating mobs, loot etc.
             /*for(int i=0; i<ds.rooms.Count; i++)
             {
                 mapObjects.Add(new Robot(0, contentManager, ds.rooms[i].Item1+6, ds.rooms[i].Item2));
@@ -72,7 +79,7 @@ namespace dung
 
                 for (int j = 0; j < tmpc; j++)
                 {
-                    mapObjects.Add(new Ghost(contentManager, 0, ds.rooms[i].Item1, ds.rooms[i].Item2));
+                    mapObjects.Add(new Ghost(contentManager, 0, ds.rooms[i].Item1, ds.rooms[i].Item2, sampleGhosts[0]));
                 }    
             }
         }

@@ -26,52 +26,83 @@ namespace dung
         public override int HP { get; protected set; }
         protected double viewRadius { get; set; }
 
+        /// <summary>
+        /// with file reading, hp to max
+        /// </summary>
+        /// <param name="contentManager"></param>
+        /// <param name="type"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public Ghost(ContentManager contentManager, int type, double x, double y)
         {
+            //standart shit
             Action = "id";
 
             degDirection = 0;
 
-            speed = 0.1f;
-
             direction = "w";
 
+            timeSinceLastAttack = 0;
+
+            //given shit
             X = x;
             Y = y;
 
-            HP = 1;
+            Type = type;
+            
+            //shit in files
+            using (StreamReader sr = new StreamReader("info/global/mobs/" + Type.ToString() + "/m.info"))
+            {
+                List<string> tmplist = sr.ReadToEnd().Split('\n').ToList();
 
-            Radius = 0.5;
+                speed = double.Parse(tmplist[0].Trim('\r'));
 
-            viewRadius = 7;
+                HP = Int32.Parse(tmplist[1].Trim('\r'));
 
-            timeSinceLastAttack = 0;
-            attackSpeed = 500;
+                Radius = double.Parse(tmplist[2].Trim('\r'));
 
+                attackSpeed = Int32.Parse(tmplist[3].Trim('\r'));
+
+                viewRadius = double.Parse(tmplist[4].Trim('\r'));
+            }
+            
             updateTexture(contentManager, true);
         }
 
+        /// <summary>
+        /// with sample including hp
+        /// </summary>
+        /// <param name="contentManager"></param>
+        /// <param name="type"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="sampleGhost"></param>
         public Ghost(ContentManager contentManager, int type, double x, double y, Ghost sampleGhost)
         {
+            //standart shit
             Action = "id";
 
             degDirection = 0;
 
-            speed = 0.1f;
-
             direction = "w";
 
+            timeSinceLastAttack = 0;
+
+            //given shit
             X = x;
             Y = y;
 
-            HP = 1;
+            Type = type;
 
-            Radius = 0.5;
+            speed = sampleGhost.speed;
 
-            viewRadius = 7;
+            HP = sampleGhost.HP;
 
-            timeSinceLastAttack = 0;
-            attackSpeed = 500;
+            Radius = sampleGhost.Radius;
+
+            attackSpeed = sampleGhost.attackSpeed;
+
+            viewRadius = sampleGhost.viewRadius;
 
             updateTexture(contentManager, true);
         }
