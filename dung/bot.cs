@@ -78,7 +78,7 @@ namespace dung
             }
         }
 
-        public override void Update(ContentManager contentManager, GameWorld gameWorld)
+        public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
         {
             double previousX = X, previousY = Y;
 

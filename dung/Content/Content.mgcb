@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:0block0.png
 
+#begin 0bullet0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:0bullet0.png
+
 #begin 1block0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -68,13 +80,6 @@
 /processorParam:TextureFormat=Compressed
 /build:hpfont.spritefont
 
-#begin hpfont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:hpfont.spritefont
-
 #begin hpheart.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -98,13 +103,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:hpline.png
-
-#begin mainfont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:mainfont.spritefont
 
 #begin mainfont.spritefont
 /importer:FontDescriptionImporter

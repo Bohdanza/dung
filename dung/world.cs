@@ -99,9 +99,19 @@ namespace dung
         {
             mapObjects.Sort((a, b) => a.Y.CompareTo(b.Y));
 
-            for(int i=0; i<mapObjects.Count; i++)
+            int l = 1;
+
+            for (int i = 0; i < mapObjects.Count; i += l)
             {
-                mapObjects[i].Update(contentManager, this);
+                l = 1;
+
+                mapObjects[i].Update(contentManager, this, i);
+                
+                if(!mapObjects[i].alive)
+                {
+                    l = 0;
+                    mapObjects.RemoveAt(i);
+                }
             }
 
             /*for (int i = 0; i < blocks.Count; i++)
@@ -196,6 +206,47 @@ namespace dung
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Get closest object of given type
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="indexToIgnore"></param>
+        /// <param name="typeAsString"></param>
+        /// <returns></returns>
+        public MapObject GetClosestObject(double x, double y, int indexToIgnore, string typeAsString)
+        {
+            int mi = 0;
+            double md = -1;
+
+            for (int i = 0; i < mapObjects.Count; i++)
+            {
+                if (mapObjects[i].GetTypeAsString() == typeAsString)
+                {
+                    double tmpd = this.GetDist(x, y, mapObjects[i].X, mapObjects[i].Y);
+
+                    if (tmpd < md)
+                    {
+                        mi = i;
+
+                        md = tmpd;
+                    }
+                }
+            }
+
+            if (md > -1)
+            {
+                return mapObjects[mi];
+            }
+
+            return null;
+        }
+        
+        public void AddObject(MapObject mapObject)
+        {
+            mapObjects.Add(mapObject);
         }
     }
 }

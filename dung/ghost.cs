@@ -119,7 +119,7 @@ namespace dung
             }
         }
 
-        public override void Update(ContentManager contentManager, GameWorld gameWorld)
+        public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
         {
             timeSinceLastAttack++;
 
@@ -221,7 +221,14 @@ namespace dung
             if (HP < 0)
             {
                 HP = 0;
+
+                alive = false;
             }
+        }
+
+        public override string GetTypeAsString()
+        {
+            return "Ghost";
         }
     }
 }

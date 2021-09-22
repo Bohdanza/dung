@@ -23,8 +23,9 @@ namespace dung
         protected virtual bool isInfected { get; set; } = false;
         public virtual double Radius { get; protected set; }
         public virtual int HP { get; protected set; }
+        public virtual bool alive { get; protected set; } = true;
 
-        public virtual void Update(ContentManager contentManager, GameWorld gameWorld)
+        public virtual void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
         {
             
         }
@@ -42,6 +43,11 @@ namespace dung
         public virtual void Attack(int strenght)
         {
 
+        }
+
+        public virtual string GetTypeAsString()
+        {
+            return "";
         }
     }
 }

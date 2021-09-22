@@ -26,6 +26,8 @@ namespace dung
         private Texture2D hpHeart;
         private SpriteFont hpFont;
 
+        private Bullet tmpbullet;
+
         public Hero(ContentManager contentManager, double x, double y)
         {
             X = x;
@@ -38,6 +40,8 @@ namespace dung
             hpHeart = contentManager.Load<Texture2D>("hpheart");
 
             hpFont = contentManager.Load<SpriteFont>("hpfont");
+
+            tmpbullet = new Bullet(contentManager, 0, 0, 0, 0);
 
             UpdateTextures(contentManager, true);
         }
@@ -69,7 +73,7 @@ namespace dung
             spriteBatch.DrawString(hpFont, HP.ToString(), new Vector2(15, (int)(35+hpHeart.Height*1.3)), Color.White);
         }
 
-        public override void Update(ContentManager contentManager, GameWorld gameWorld)
+        public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
         {
             double px = X;
             double py = Y;
@@ -96,6 +100,24 @@ namespace dung
                 X += speed;
             }
 
+            var mouseState = Mouse.GetState();
+
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                double tmpdir = Math.Atan2(540 - mouseState.Y, 960 - mouseState.X);
+
+                tmpdir += (float)Math.PI;
+
+               // if(mouseState.X<)
+
+                tmpdir %= (float)(Math.PI * 2);
+
+                double tmpbx = X + Math.Cos(tmpdir) * (Radius + tmpbullet.Radius);
+                double tmpby = Y + Math.Sin(tmpdir) * (Radius + tmpbullet.Radius);
+
+                gameWorld.AddObject(new Bullet(contentManager, 0, tmpbx, tmpby, tmpdir, tmpbullet));
+            }
+
             if ((int)X != (int)px || (int)Y != (int)py)
             {
                 if (X < 0 || X >= gameWorld.blocks.Count || Y < 0 || Y >= gameWorld.blocks[(int)X].Count || !gameWorld.blocks[(int)X][(int)Y].passable)
@@ -113,7 +135,14 @@ namespace dung
             if (HP < 0)
             {
                 HP = 0;
+
+                alive = false;
             }
+        }
+
+        public override string GetTypeAsString()
+        {
+            return "Hero";
         }
     }
 }
