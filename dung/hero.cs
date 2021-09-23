@@ -25,8 +25,7 @@ namespace dung
 
         private Texture2D hpHeart;
         private SpriteFont hpFont;
-
-        private Bullet tmpbullet;
+        public Gun GunInHand;
 
         public Hero(ContentManager contentManager, double x, double y)
         {
@@ -41,7 +40,7 @@ namespace dung
 
             hpFont = contentManager.Load<SpriteFont>("hpfont");
 
-            tmpbullet = new Bullet(contentManager, 0, 0, 0, 0);
+            GunInHand = new Gun(contentManager, 0, 0, 0);
 
             UpdateTextures(contentManager, true);
         }
@@ -61,6 +60,8 @@ namespace dung
             //Can U hear me?
             //U don't want to see what would happen, trust me
             spriteBatch.Draw(Textures[texturesPhase], new Vector2(x - Textures[texturesPhase].Width / 2, y - Textures[texturesPhase].Height), Color.White);
+
+            GunInHand.Draw(spriteBatch, x, y - (int)(Textures[texturesPhase].Height * 0.5));
         }
 
         public void DrawInterface(SpriteBatch spriteBatch)
@@ -99,23 +100,23 @@ namespace dung
             {
                 X += speed;
             }
+            
+            GunInHand.Update(contentManager, gameWorld, myIndex);
 
             var mouseState = Mouse.GetState();
 
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                double tmpdir = Math.Atan2(540 - mouseState.Y, 960 - mouseState.X);
+                if (GunInHand.TimeSinceLastShoot >= GunInHand.FireSpeed)
+                {
+                    double tmpdir = Math.Atan2(540 - mouseState.Y, 960 - mouseState.X);
 
-                tmpdir += (float)Math.PI;
+                    tmpdir += (float)Math.PI;
 
-               // if(mouseState.X<)
+                    tmpdir %= (float)(Math.PI * 2);
 
-                tmpdir %= (float)(Math.PI * 2);
-
-                double tmpbx = X + Math.Cos(tmpdir) * (Radius + tmpbullet.Radius);
-                double tmpby = Y + Math.Sin(tmpdir) * (Radius + tmpbullet.Radius);
-
-                gameWorld.AddObject(new Bullet(contentManager, 0, tmpbx, tmpby, tmpdir, tmpbullet));
+                    GunInHand.ShootInDirection(gameWorld, contentManager, X, Y, tmpdir, Radius);
+                }
             }
 
             if ((int)X != (int)px || (int)Y != (int)py)
@@ -136,7 +137,7 @@ namespace dung
             {
                 HP = 0;
 
-//                alive = false;
+                alive = false;
             }
         }
 

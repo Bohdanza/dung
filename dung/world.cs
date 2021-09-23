@@ -247,6 +247,8 @@ namespace dung
         public void AddObject(MapObject mapObject)
         {
             mapObjects.Add(mapObject);
+
+            mapObjects.Sort((a, b) => a.Y.CompareTo(b.Y));
         }
     }
 }
