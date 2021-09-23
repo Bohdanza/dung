@@ -166,7 +166,6 @@ namespace dung
             }
 
             X += Math.Cos(degDirection) * speed;
-            Y += Math.Sin(degDirection) * speed;
 
             if (X < 0)
             {
@@ -177,6 +176,16 @@ namespace dung
             {
                 X = gameWorld.blocks.Count - 1;
             }
+
+            if (!gameWorld.blocks[(int)Math.Floor(X)][(int)Math.Floor(Y)].passable)
+            {
+                X = px;
+                
+                //constant shit
+                degDirection += 1.57079633;
+            }
+
+            Y += Math.Sin(degDirection) * speed;
 
             if (Y < 0)
             {
@@ -190,7 +199,6 @@ namespace dung
 
             if (!gameWorld.blocks[(int)Math.Floor(X)][(int)Math.Floor(Y)].passable)
             {
-                X = px;
                 Y = py;
 
                 //constant shit

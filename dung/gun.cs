@@ -91,6 +91,11 @@ namespace dung
             base.Draw(spriteBatch, x, y);
         }
 
+        public void Draw(SpriteBatch spriteBatch, int x, int y, double rotation)
+        {
+            spriteBatch.Draw(Textures[base.texturesPhase], new Vector2(x, y - Textures[base.texturesPhase].Height), new Rectangle(0, 0, Textures[base.texturesPhase].Width, Textures[base.texturesPhase].Height), Color.White, (float)rotation, new Vector2(Textures[texturesPhase].Width / 2, Textures[texturesPhase].Height / 2), 1f, SpriteEffects.None, 0);
+        }
+
         public void ShootInDirection(GameWorld gameWorld, ContentManager contentManager, double x, double y, double direction, double radius)
         {
             if (TimeSinceLastShoot >= FireSpeed)

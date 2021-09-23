@@ -61,7 +61,15 @@ namespace dung
             //U don't want to see what would happen, trust me
             spriteBatch.Draw(Textures[texturesPhase], new Vector2(x - Textures[texturesPhase].Width / 2, y - Textures[texturesPhase].Height), Color.White);
 
-            GunInHand.Draw(spriteBatch, x, y - (int)(Textures[texturesPhase].Height * 0.5));
+            var mouseState = Mouse.GetState();
+
+            double tmpdir = Math.Atan2(540 - mouseState.Y, 960 - mouseState.X);
+
+            tmpdir += 3f*(float)Math.PI;
+
+            tmpdir %= (float)(Math.PI * 2);
+
+            GunInHand.Draw(spriteBatch, x, y - (int)(Textures[texturesPhase].Height * 0.05), tmpdir);
         }
 
         public void DrawInterface(SpriteBatch spriteBatch)

@@ -18,7 +18,7 @@ namespace dung
         public override int Type { get; protected set; }
         public override double Radius { get; protected set; }
         public override List<Texture2D> Textures { get; protected set; }
-        private int texturesPhase;
+        protected int texturesPhase;
         public virtual int weight { get; protected set; }
 
         protected virtual void updateTexture(ContentManager contentManager, bool reload)
