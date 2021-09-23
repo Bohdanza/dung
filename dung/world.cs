@@ -219,7 +219,7 @@ namespace dung
         public MapObject GetClosestObject(double x, double y, int indexToIgnore, string typeAsString)
         {
             int mi = 0;
-            double md = -1;
+            double md = double.MaxValue;
 
             for (int i = 0; i < mapObjects.Count; i++)
             {

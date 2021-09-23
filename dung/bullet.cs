@@ -125,7 +125,7 @@ namespace dung
                     if (gameWorld.GetDist(X, Y, closestObject.X, closestObject.Y) < Radius + closestObject.Radius)
                     {
                         alive = false;
-
+                        
                         closestObject.Attack(damage);
                     }
                 }

@@ -136,7 +136,7 @@ namespace dung
             {
                 HP = 0;
 
-                alive = false;
+//                alive = false;
             }
         }
 
