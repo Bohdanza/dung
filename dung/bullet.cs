@@ -48,7 +48,7 @@ namespace dung
             using (StreamReader sr = new StreamReader("info/global/bullets/" + Type.ToString() + "/m.info"))
             {
                 List<string> tmplist = sr.ReadToEnd().Split('\n').ToList();
-
+                   
                 damage = Int32.Parse(tmplist[0]);
 
                 Radius = double.Parse(tmplist[1]);
@@ -111,7 +111,7 @@ namespace dung
 
             if ((int)X != (int)px || (int)Y != (int)py)
             {
-                if (!gameWorld.blocks[(int)X][(int)Y].passable)
+                if (X < 0 || Y < 0 || X >= gameWorld.blocks.Count || Y >= gameWorld.blocks[(int)X].Count || !gameWorld.blocks[(int)X][(int)Y].passable)
                 {
                     alive = false;
                 }

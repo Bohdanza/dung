@@ -16,7 +16,7 @@ namespace dung
         public override double X { get; protected set; }
         public override double Y { get; protected set; }
         public override int Type { get; protected set; }
-        public List<Bullet> bulletsShooting { get; protected set; }
+        public List<Tuple<Bullet, double>> bulletsShooting { get; protected set; }
         public int FireSpeed { get; protected set; }
         public int TimeSinceLastShoot { get; protected set; }
 
@@ -36,7 +36,7 @@ namespace dung
             X = x;
             Y = y;
 
-            bulletsShooting = new List<Bullet>();
+            bulletsShooting = new List<Tuple<Bullet, double>>();
 
             using(StreamReader sr = new StreamReader("info/global/items/guns/"+Type.ToString()+"/m.info"))
             {
@@ -46,9 +46,9 @@ namespace dung
 
                 int tmpn = Int32.Parse(tmplist[1]);
 
-                for (int i = 2; i < tmpn+2; i++)
+                for (int i = 2; i < tmpn * 2 + 2; i += 2)
                 {
-                    bulletsShooting.Add(new Bullet(contentManager, Int32.Parse(tmplist[i]), 0, 0, 0));
+                    bulletsShooting.Add(new Tuple<Bullet, double>(new Bullet(contentManager, Int32.Parse(tmplist[i]), 0, 0, 0), double.Parse(tmplist[i+1])));
                 }
             }
 
@@ -93,7 +93,19 @@ namespace dung
 
         public void Draw(SpriteBatch spriteBatch, int x, int y, double rotation)
         {
-            spriteBatch.Draw(Textures[base.texturesPhase], new Vector2(x, y - Textures[base.texturesPhase].Height), new Rectangle(0, 0, Textures[base.texturesPhase].Width, Textures[base.texturesPhase].Height), Color.White, (float)rotation, new Vector2(Textures[texturesPhase].Width / 2, Textures[texturesPhase].Height / 2), 1f, SpriteEffects.None, 0);
+            if ((rotation+Math.PI*0.5) % (2 * Math.PI) < Math.PI)
+            {
+                spriteBatch.Draw(Textures[base.texturesPhase], new Vector2(x, y - Textures[base.texturesPhase].Height), new Rectangle(0, 0, Textures[base.texturesPhase].Width, Textures[base.texturesPhase].Height), Color.White, (float)rotation, new Vector2(Textures[texturesPhase].Width / 2, Textures[texturesPhase].Height / 2), 1f, SpriteEffects.None, 0);
+            }
+            else
+            {
+                spriteBatch.Draw(Textures[base.texturesPhase],
+                new Vector2(x, y - Textures[base.texturesPhase].Height),
+                new Rectangle(0, 0, Textures[base.texturesPhase].Width, Textures[base.texturesPhase].Height),
+                Color.White, (float)(rotation+Math.PI),
+                new Vector2(Textures[texturesPhase].Width / 2, Textures[texturesPhase].Height / 2), new Vector2(1f, 1f),
+                SpriteEffects.FlipHorizontally, 0);
+            }
         }
 
         public void ShootInDirection(GameWorld gameWorld, ContentManager contentManager, double x, double y, double direction, double radius)
@@ -104,10 +116,10 @@ namespace dung
 
                 for (int i = 0; i < bulletsShooting.Count; i++)
                 {
-                    double tmpbx = x + Math.Cos(direction) * (radius + bulletsShooting[i].Radius);
-                    double tmpby = y + Math.Sin(direction) * (radius + bulletsShooting[i].Radius);
+                    double tmpbx = x + Math.Cos(direction) * (radius + bulletsShooting[i].Item1.Radius);
+                    double tmpby = y + Math.Sin(direction) * (radius + bulletsShooting[i].Item1.Radius);
 
-                    gameWorld.AddObject(new Bullet(contentManager, 0, tmpbx, tmpby, direction, bulletsShooting[i]));
+                    gameWorld.AddObject(new Bullet(contentManager, bulletsShooting[i].Item1.Type, tmpbx, tmpby, direction+bulletsShooting[i].Item2, bulletsShooting[i].Item1));
                 }
             }
         }

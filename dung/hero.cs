@@ -40,7 +40,7 @@ namespace dung
 
             hpFont = contentManager.Load<SpriteFont>("hpfont");
 
-            GunInHand = new Gun(contentManager, 0, 0, 0);
+            GunInHand = new Gun(contentManager, 2, 0, 0);
 
             UpdateTextures(contentManager, true);
         }
@@ -65,7 +65,7 @@ namespace dung
 
             double tmpdir = Math.Atan2(540 - mouseState.Y, 960 - mouseState.X);
 
-            tmpdir += 3f*(float)Math.PI;
+            tmpdir += 3f * (float)Math.PI;
 
             tmpdir %= (float)(Math.PI * 2);
 
@@ -141,7 +141,7 @@ namespace dung
         {
             HP -= strenght;
 
-            if (HP < 0)
+            if (HP <= 0)
             {
                 HP = 0;
 
