@@ -20,6 +20,7 @@ namespace dung
         public MapObject referenceToHero { get; private set; }
         public List<Block> sampleBlocks { get; private set; } = new List<Block>();
         public List<Ghost> sampleGhosts { get; private set; } = new List<Ghost>();
+        public List<Gun> sampleGuns { get; private set; } = new List<Gun>();
 
         public GameWorld(ContentManager contentManager)
         {
@@ -37,12 +38,17 @@ namespace dung
                 sampleGhosts.Add(new Ghost(contentManager, i, 0, 0));
             }
 
-            //generating main dungeon
-            DungeonSynthesizer ds = new DungeonSynthesizer(contentManager, 400, 400);
+            for (int i = 0; i < 4; i++)
+            {
+                sampleGuns.Add(new Gun(contentManager, i, 0, 0));
+            }
 
-            ds.RandomSeeds(200, 250, 15);
+            //generating main dungeon
+            DungeonSynthesizer ds = new DungeonSynthesizer(contentManager, 480, 480);
+
+            ds.RandomSeeds(85, 125, 40);
             ds.GenerateCorridors(250, 1000);
-            ds.ReplaceRooms(11, 11);
+            ds.ReplaceRooms(17, 17);
             ds.PlaceWalls();
 
             List<List<int>> tmplist = ds.GetList();
@@ -62,25 +68,102 @@ namespace dung
             }
 
             //generating mobs, loot etc.
-            /*for(int i=0; i<ds.rooms.Count; i++)
-            {
-                mapObjects.Add(new Robot(0, contentManager, ds.rooms[i].Item1+6, ds.rooms[i].Item2));
-            }*/
-
-            mapObjects.Add(new Hero(contentManager, ds.rooms[0].Item1, ds.rooms[0].Item2));
-
-            referenceToHero = mapObjects[mapObjects.Count - 1];
+            List<int> specialRooms = new List<int>();
 
             var rnd = new Random();
 
-            for (int i = 1; i < ds.rooms.Count; i++)
+            while(specialRooms.Count<2)
             {
-                int tmpc = rnd.Next(2, 15);
+                int tmpi = rnd.Next(0, ds.rooms.Count);
 
-                for (int j = 0; j < tmpc; j++)
+                if(!specialRooms.Contains(tmpi))
                 {
-                    mapObjects.Add(new Ghost(contentManager, 0, ds.rooms[i].Item1, ds.rooms[i].Item2, sampleGhosts[0]));
-                }    
+                    specialRooms.Add(tmpi);
+                }
+            }
+
+            mapObjects.Add(new Hero(contentManager, ds.rooms[specialRooms[0]].Item1, ds.rooms[specialRooms[0]].Item2));
+
+            referenceToHero = mapObjects[mapObjects.Count - 1];
+
+            
+            List<int> roomsRarity = new List<int>();
+            List<List<int>> roomsByRarity = new List<List<int>>();
+
+            int tmpdsroomscount = ds.rooms.Count - specialRooms.Count;
+
+            for (int i = 0; i < 5; i++)
+            {
+                int tmpcount;
+
+                if (i < 4)
+                {
+                    tmpcount = tmpdsroomscount / 2;
+                    tmpdsroomscount /= 2;
+                }
+                else
+                {
+                    tmpcount = tmpdsroomscount;
+                }
+
+                roomsRarity.Add(tmpcount);
+
+                List<int> tmproomslist = new List<int>();
+
+                while(tmproomslist.Count<tmpcount)
+                {
+                    int tmpi = rnd.Next(0, ds.rooms.Count);
+
+                    bool tmpb = true;
+
+                    for (int j = 0; j < roomsByRarity.Count&&tmpb; j++)
+                    {
+                        if (roomsByRarity[j].Contains(tmpi) || specialRooms.Contains(tmpi) || tmproomslist.Contains(tmpi))
+                        {
+                            tmpb = false;
+                        }
+                    }
+
+                    if(tmpb)
+                    {
+                        tmproomslist.Add(tmpi);
+                    }
+                }
+
+                roomsByRarity.Add(tmproomslist);
+            }
+
+            for (int i = 0; i < roomsByRarity.Count; i++)
+            {
+                for (int j = 0; j < roomsByRarity[i].Count; j++)
+                {
+                    int ghostcount = (i + 3) * i / 5 + rnd.Next(0, 3);
+
+                    for (int k = 0; k < ghostcount; k++)
+                    {
+                        mapObjects.Add(new Ghost(contentManager, 0, ds.rooms[j].Item1, ds.rooms[j].Item2, sampleGhosts[0]));
+                    }
+                    
+                    if (rnd.Next(0, 100) <= 70)
+                    {
+                        List<Gun> tmprgunslist = new List<Gun>();
+
+                        for (int q = 0; q < sampleGuns.Count; q++)
+                        {
+                            if (sampleGuns[q].rarity == i)
+                            {
+                                tmprgunslist.Add(sampleGuns[q]);
+                            }
+                        }
+
+                        int tmpint = rnd.Next(0, tmprgunslist.Count);
+
+                        if (tmpint < tmprgunslist.Count)
+                        {
+                            mapObjects.Add(new Gun(contentManager, tmprgunslist[tmpint].Type, ds.rooms[j].Item1, ds.rooms[j].Item2, tmprgunslist[tmpint]));
+                        }
+                    }
+                }
             }
         }
 
@@ -113,14 +196,6 @@ namespace dung
                     mapObjects.RemoveAt(i);
                 }
             }
-
-            /*for (int i = 0; i < blocks.Count; i++)
-            {
-                for (int j = 0; j < blocks[i].Count; j++)
-                {
-                    blocks[i][j].update(contentManager);
-                }
-            }*/
         }
 
         public void draw(SpriteBatch spriteBatch, int x, int y)

@@ -40,7 +40,7 @@ namespace dung
 
             hpFont = contentManager.Load<SpriteFont>("hpfont");
 
-            GunInHand = new Gun(contentManager, 2, 0, 0);
+            GunInHand = new Gun(contentManager, 3, 0, 0);
 
             UpdateTextures(contentManager, true);
         }
@@ -69,7 +69,7 @@ namespace dung
 
             tmpdir %= (float)(Math.PI * 2);
 
-            GunInHand.Draw(spriteBatch, x, y - (int)(Textures[texturesPhase].Height * 0.05), tmpdir);
+            GunInHand.Draw(spriteBatch, x, y, tmpdir);
         }
 
         public void DrawInterface(SpriteBatch spriteBatch)
