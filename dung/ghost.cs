@@ -15,6 +15,8 @@ namespace dung
     {
         public override double X { get; protected set; }
         public override double Y { get; protected set; }
+        public double WorkingX { get; protected set; }
+        public double WorkingY { get; protected set; }
         public override List<Texture2D> Textures { get; protected set; }
         public override int Type { get; protected set; }
         public override string Action { get; protected set; }
@@ -33,7 +35,7 @@ namespace dung
         /// <param name="type"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public Ghost(ContentManager contentManager, int type, double x, double y)
+        public Ghost(ContentManager contentManager, int type, double x, double y, double workingX, double workingY)
         {
             //standart shit
             Action = "id";
@@ -47,6 +49,9 @@ namespace dung
             //given shit
             X = x;
             Y = y;
+
+            WorkingX = workingX;
+            WorkingY = workingY;
 
             Type = type;
             
@@ -77,7 +82,7 @@ namespace dung
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="sampleGhost"></param>
-        public Ghost(ContentManager contentManager, int type, double x, double y, Ghost sampleGhost)
+        public Ghost(ContentManager contentManager, int type, double x, double y, double workingX, double workingY, Ghost sampleGhost)
         {
             //standart shit
             Action = "id";
@@ -91,6 +96,9 @@ namespace dung
             //given shit
             X = x;
             Y = y;
+
+            WorkingX = workingX;
+            WorkingY = workingY;
 
             Type = type;
 
@@ -128,28 +136,6 @@ namespace dung
 
             var rnd = new Random();
 
-            if (rnd.Next(0, 100) <= 5)
-            {
-                int tmpres = rnd.Next(0, 2);
-
-                if (tmpres == 0)
-                {
-                    tmpres = -1;
-                }
-
-                degDirection += rnd.NextDouble()*tmpres;
-            }
-
-            if (degDirection >= 2 * Math.PI)
-            {
-                degDirection = degDirection - 2 * Math.PI;
-            }
-
-            if (degDirection < 0)
-            {
-                degDirection = degDirection + 2 * Math.PI;
-            }
-
             if (gameWorld.GetDist(X, Y, gameWorld.referenceToHero.X, gameWorld.referenceToHero.Y) <= viewRadius)
             {
                 double x1 = X - gameWorld.referenceToHero.X, y1 = Y - gameWorld.referenceToHero.Y;
@@ -159,50 +145,61 @@ namespace dung
                 degDirection += (float)Math.PI;
 
                 degDirection %= (float)(Math.PI * 2);
-                /*if (X < gameWorld.referenceToHero.X)
+
+                Action = "wa";
+            }
+            else if(gameWorld.GetDist(X, Y, WorkingX, WorkingY) >= speed)
+            {
+                double x1 = X - WorkingX, y1 = Y - WorkingY;
+
+                degDirection = Math.Atan2(y1, x1);
+
+                degDirection += (float)Math.PI;
+
+                degDirection %= (float)(Math.PI * 2);
+
+                Action = "wa";
+            }
+            else
+            {
+                Action = "id";
+            }
+
+            if (Action == "wa")
+            {
+                X += Math.Cos(degDirection) * speed;
+
+                if (X < 0)
                 {
-                    degDirection += Math.PI;
-                }*/
-            }
+                    X = 0;
+                }
 
-            X += Math.Cos(degDirection) * speed;
+                if (X >= gameWorld.blocks.Count)
+                {
+                    X = gameWorld.blocks.Count - 1;
+                }
 
-            if (X < 0)
-            {
-                X = 0;
-            }
+                if (!gameWorld.blocks[(int)Math.Floor(X)][(int)Math.Floor(Y)].passable)
+                {
+                    X = px;
+                }
 
-            if (X >= gameWorld.blocks.Count)
-            {
-                X = gameWorld.blocks.Count - 1;
-            }
+                Y += Math.Sin(degDirection) * speed;
 
-            if (!gameWorld.blocks[(int)Math.Floor(X)][(int)Math.Floor(Y)].passable)
-            {
-                X = px;
-                
-                //constant shit
-                degDirection += 1.57079633;
-            }
+                if (Y < 0)
+                {
+                    Y = 0;
+                }
 
-            Y += Math.Sin(degDirection) * speed;
+                if (Y >= gameWorld.blocks[(int)Math.Floor(X)].Count)
+                {
+                    Y = gameWorld.blocks[(int)Math.Floor(X)].Count - 1;
+                }
 
-            if (Y < 0)
-            {
-                Y = 0;
-            }
-
-            if (Y >= gameWorld.blocks[(int)Math.Floor(X)].Count)
-            {
-                Y = gameWorld.blocks[(int)Math.Floor(X)].Count - 1;
-            }
-
-            if (!gameWorld.blocks[(int)Math.Floor(X)][(int)Math.Floor(Y)].passable)
-            {
-                Y = py;
-
-                //constant shit
-                degDirection += 1.57079633;
+                if (!gameWorld.blocks[(int)Math.Floor(X)][(int)Math.Floor(Y)].passable)
+                {
+                    Y = py;
+                }
             }
 
             double tmpdist = gameWorld.GetDist(X, Y, gameWorld.referenceToHero.X, gameWorld.referenceToHero.Y);

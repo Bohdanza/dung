@@ -14,7 +14,7 @@ namespace dung
     public class GameWorld
     {
         public List<List<Block>> blocks;
-        const int blockDrawY = 42, BlockWidth = 64;
+        const int blockDrawY = 64, BlockWidth = 64;
         private Texture2D darknessEffect;
         private List<MapObject> mapObjects;
         public MapObject referenceToHero { get; private set; }
@@ -35,7 +35,7 @@ namespace dung
             
             for (int i = 0; i < 1; i++)
             {
-                sampleGhosts.Add(new Ghost(contentManager, i, 0, 0));
+                sampleGhosts.Add(new Ghost(contentManager, i, 0, 0, 0, 0));
             }
 
             for (int i = 0; i < 4; i++)
@@ -46,7 +46,7 @@ namespace dung
             //generating main dungeon
             DungeonSynthesizer ds = new DungeonSynthesizer(contentManager, 480, 480);
 
-            ds.RandomSeeds(85, 125, 40);
+            ds.RandomSeeds(175, 256, 30);
             ds.GenerateCorridors(250, 1000);
             ds.ReplaceRooms(17, 17);
             ds.PlaceWalls();
@@ -82,87 +82,20 @@ namespace dung
                 }
             }
 
-            mapObjects.Add(new Hero(contentManager, ds.rooms[specialRooms[0]].Item1, ds.rooms[specialRooms[0]].Item2));
+            AddObject(new Hero(contentManager, ds.rooms[specialRooms[0]].Item1, ds.rooms[specialRooms[0]].Item2));
 
             referenceToHero = mapObjects[mapObjects.Count - 1];
 
             
-            List<int> roomsRarity = new List<int>();
-            List<List<int>> roomsByRarity = new List<List<int>>();
+            List<List<int>> fightingRooms = new List<List<int>>();
 
-            int tmpdsroomscount = ds.rooms.Count - specialRooms.Count;
-
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < ds.rooms.Count; i++)
             {
-                int tmpcount;
-
-                if (i < 4)
+                if(!specialRooms.Contains(i))
                 {
-                    tmpcount = tmpdsroomscount / 2;
-                    tmpdsroomscount /= 2;
-                }
-                else
-                {
-                    tmpcount = tmpdsroomscount;
-                }
+                    insertRoomObtaclesAt(contentManager, ds.rooms[i].Item1 - 8, ds.rooms[i].Item2 - 8, 17, 17, "", 7, 4, 10);
 
-                roomsRarity.Add(tmpcount);
-
-                List<int> tmproomslist = new List<int>();
-
-                while(tmproomslist.Count<tmpcount)
-                {
-                    int tmpi = rnd.Next(0, ds.rooms.Count);
-
-                    bool tmpb = true;
-
-                    for (int j = 0; j < roomsByRarity.Count&&tmpb; j++)
-                    {
-                        if (roomsByRarity[j].Contains(tmpi) || specialRooms.Contains(tmpi) || tmproomslist.Contains(tmpi))
-                        {
-                            tmpb = false;
-                        }
-                    }
-
-                    if(tmpb)
-                    {
-                        tmproomslist.Add(tmpi);
-                    }
-                }
-
-                roomsByRarity.Add(tmproomslist);
-            }
-
-            for (int i = 0; i < roomsByRarity.Count; i++)
-            {
-                for (int j = 0; j < roomsByRarity[i].Count; j++)
-                {
-                    int ghostcount = (i + 3) * i / 5 + rnd.Next(0, 3);
-
-                    for (int k = 0; k < ghostcount; k++)
-                    {
-                        mapObjects.Add(new Ghost(contentManager, 0, ds.rooms[j].Item1, ds.rooms[j].Item2, sampleGhosts[0]));
-                    }
-                    
-                    if (rnd.Next(0, 100) <= 70)
-                    {
-                        List<Gun> tmprgunslist = new List<Gun>();
-
-                        for (int q = 0; q < sampleGuns.Count; q++)
-                        {
-                            if (sampleGuns[q].rarity == i)
-                            {
-                                tmprgunslist.Add(sampleGuns[q]);
-                            }
-                        }
-
-                        int tmpint = rnd.Next(0, tmprgunslist.Count);
-
-                        if (tmpint < tmprgunslist.Count)
-                        {
-                            mapObjects.Add(new Gun(contentManager, tmprgunslist[tmpint].Type, ds.rooms[j].Item1, ds.rooms[j].Item2, tmprgunslist[tmpint]));
-                        }
-                    }
+                    insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(12, 20), 0);
                 }
             }
         }
@@ -237,7 +170,7 @@ namespace dung
                     {
                         if (blocks[i][j].type != 0)
                         {
-                            blocks[i][j].draw(spriteBatch, drawx + i * blocks[i][j].textures[0].Width, drawy + j * blockDrawY - blockDrawY);
+                            blocks[i][j].draw(spriteBatch, drawx + i * BlockWidth, drawy + j * blockDrawY - blocks[i][j].textures[0].Height + blockDrawY);
                         }
                     }
                 }
@@ -324,6 +257,52 @@ namespace dung
             mapObjects.Add(mapObject);
 
             mapObjects.Sort((a, b) => a.Y.CompareTo(b.Y));
+        }
+
+        private void insertRoomObtaclesAt(ContentManager contentManager, int x, int y, int xsize, int ysize, string roomType, int maxSize, int minObtacleNumber, int maxObtacleNumber)
+        {
+            var rnd = new Random();
+
+            int obtaclesNumber = rnd.Next(minObtacleNumber, maxObtacleNumber);
+
+            for (int k = 0; k < obtaclesNumber; k++)
+            {
+                int x1 = rnd.Next(x + 1, x + xsize - 1);
+                int y1 = rnd.Next(y + 1, y + ysize - 1);
+                int x2 = rnd.Next(x1 + 1, x1 + 1 + maxSize);
+                int y2 = rnd.Next(y1 + 1, y1 + 1 + maxSize);
+
+                for (int i = x1; i < x2; i++)
+                {
+                    for (int j = y1; j < y2; j++)
+                    {
+                        if (i >= 0 && j >= 0 && i < blocks.Count && j < blocks[i].Count && i > x && j > y && i < x + xsize - 2 && j < y + ysize - 2)
+                        {
+                            blocks[i][j] = new Block(2, i, j, contentManager, sampleBlocks[2]);
+                        }
+                    }
+                }
+            }
+        }
+        
+        private void insertMobs(ContentManager contentManager, int x, int y, int xsize, int ysize, int number, int type)
+        {
+            int c = 0;
+
+            var rnd = new Random();
+
+            while (c < number)
+            {
+                double tmpx = x + rnd.NextDouble() * xsize;
+                double tmpy = y + rnd.NextDouble() * ysize;
+
+                if (blocks[(int)tmpx][(int)tmpy].passable)
+                {
+                    AddObject(new Ghost(contentManager, type, tmpx, tmpy, tmpx, tmpy, sampleGhosts[type]));
+
+                    c++;
+                }
+            }
         }
     }
 }
