@@ -96,6 +96,10 @@ namespace dung
                     insertRoomObtaclesAt(contentManager, ds.rooms[i].Item1 - 8, ds.rooms[i].Item2 - 8, 17, 17, "", 7, 4, 10);
 
                     insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(3, 20), 0);
+
+                    int tmptype = 0;
+
+                    insertGun(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, tmptype);
                 }
             }
         }
@@ -302,6 +306,45 @@ namespace dung
 
                     c++;
                 }
+            }
+        }
+
+        private void insertGun(ContentManager contentManager, int x, int y, int xsize, int ysize, int type)
+        {
+            var rnd = new Random();
+            bool placed = false;
+
+            while (!placed)
+            {
+                double tmpx = x + rnd.NextDouble() * xsize;
+                double tmpy = y + rnd.NextDouble() * ysize;
+
+                if (blocks[(int)tmpx][(int)tmpy].passable)
+                {
+                    AddObject(new Gun(contentManager, type, tmpx, tmpy, sampleGuns[type]));
+
+                    placed = true;
+                }
+            }
+        }
+
+        public void RemoveObjectAt(int index)
+        {
+            if (index < mapObjects.Count && index >= 0)
+            {
+                mapObjects.RemoveAt(index);
+            }
+        }
+
+        public void RemoveObject(MapObject mapObject)
+        {
+            try
+            {
+                mapObjects.Remove(mapObject);
+            }
+            catch
+            {
+                //We just dont care
             }
         }
     }

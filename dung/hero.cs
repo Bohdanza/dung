@@ -27,6 +27,8 @@ namespace dung
         private SpriteFont hpFont;
         public Gun GunInHand;
 
+        private int timeSinceLastAction = 0;
+
         public Hero(ContentManager contentManager, double x, double y)
         {
             X = x;
@@ -84,6 +86,8 @@ namespace dung
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
         {
+            timeSinceLastAction++;
+
             double px = X;
             double py = Y;
 
@@ -107,6 +111,26 @@ namespace dung
             if (keyboardState.IsKeyDown(Keys.D))
             {
                 X += speed;
+            }
+
+            if (timeSinceLastAction >= 100 && keyboardState.IsKeyDown(Keys.Space))
+            {
+                timeSinceLastAction = 0;
+
+                MapObject closestGun = gameWorld.GetClosestObject(X, Y, myIndex, "Gun");
+
+                if (closestGun != null)
+                {
+                    if (gameWorld.GetDist(X, Y, closestGun.X, closestGun.Y) <= this.Radius + closestGun.Radius)
+                    {
+                        GunInHand.ChangeCoords(X, Y);
+                        gameWorld.AddObject(GunInHand);
+
+                        GunInHand = (Gun)closestGun;
+
+                        gameWorld.RemoveObject(closestGun);
+                    }
+                }
             }
             
             GunInHand.Update(contentManager, gameWorld, myIndex);

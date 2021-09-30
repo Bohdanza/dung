@@ -49,5 +49,11 @@ namespace dung
         {
             return "";
         }
+
+        public virtual void ChangeCoords(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 }
