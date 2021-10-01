@@ -93,7 +93,37 @@ namespace dung
             {
                 if(!specialRooms.Contains(i))
                 {
-                    insertRoomObtaclesAt(contentManager, ds.rooms[i].Item1 - 8, ds.rooms[i].Item2 - 8, 17, 17, "", 7, 4, 10);
+                    //rarity:
+                    //0-50%
+                    //1-25%
+                    //2-13%
+                    //3-8%
+                    //4-4%
+
+                    int roomDif = rnd.Next(0, 100);
+
+                    if (roomDif < 50)
+                    {
+                        roomDif = 0;
+                    }
+                    else if (roomDif < 75)
+                    {
+                        roomDif = 1;
+                    }
+                    else if(roomDif < 88)
+                    {
+                        roomDif = 2;
+                    }
+                    else if(roomDif < 96)
+                    {
+                        roomDif = 3;
+                    }
+                    else
+                    {
+                        roomDif = 4;
+                    }
+
+                    insertRoomObtaclesAt(contentManager, ds.rooms[i].Item1 - 9, ds.rooms[i].Item2 - 9, 17, 17, "", 7, 5, 12);
 
                     insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(3, 20), 1);
 
@@ -271,20 +301,36 @@ namespace dung
 
             for (int k = 0; k < obtaclesNumber; k++)
             {
-                int x1 = rnd.Next(x + 1, x + xsize - 1);
-                int y1 = rnd.Next(y + 1, y + ysize - 1);
-                int x2 = rnd.Next(x1 + 1, x1 + 1 + maxSize);
-                int y2 = rnd.Next(y1 + 1, y1 + 1 + maxSize);
+                int tmpx = rnd.Next(x + 2, x + xsize - 1);
+                int tmpy = rnd.Next(y + 2, y + ysize - 1);
 
-                for (int i = x1; i < x2; i++)
+                if (tmpx >= 0 && tmpy >= 0 && tmpx < blocks.Count && tmpy < blocks[tmpx].Count)
                 {
-                    for (int j = y1; j < y2; j++)
-                    {
-                        if (i >= 0 && j >= 0 && i < blocks.Count && j < blocks[i].Count && i > x && j > y && i < x + xsize - 2 && j < y + ysize - 2)
-                        {
-                            blocks[i][j] = new Block(2, i, j, contentManager, sampleBlocks[2]);
-                        }
-                    }
+                    blocks[tmpx][tmpy] = new Block(2, tmpx, tmpy, contentManager);
+                }
+
+                int px1 = tmpx;
+                int py1 = tmpy;
+
+                tmpx = x + xsize - tmpx + x;
+
+                if (tmpx >= 0 && tmpy >= 0 && tmpx < blocks.Count && tmpy < blocks[tmpx].Count)
+                {
+                    blocks[tmpx][tmpy] = new Block(2, tmpx, tmpy, contentManager);
+                }
+
+                tmpy = y + ysize - tmpy + y;
+
+                if (tmpx >= 0 && tmpy >= 0 && tmpx < blocks.Count && tmpy < blocks[tmpx].Count)
+                {
+                    blocks[tmpx][tmpy] = new Block(2, tmpx, tmpy, contentManager);
+                }
+
+                tmpx = px1;
+
+                if (tmpx >= 0 && tmpy >= 0 && tmpx < blocks.Count && tmpy < blocks[tmpx].Count)
+                {
+                    blocks[tmpx][tmpy] = new Block(2, tmpx, tmpy, contentManager);
                 }
             }
         }

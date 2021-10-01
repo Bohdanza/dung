@@ -229,7 +229,7 @@ namespace dung
                 gameWorld.referenceToHero.Attack(1);
             }
 
-            if (degDirection * 57.2957795>=90&& degDirection * 57.2957795 <= 270)
+            if (degDirection * 57.2957795 >= 0 && degDirection * 57.2957795 <= 180)
             {
                 direction = "s";
             }
