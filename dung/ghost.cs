@@ -136,6 +136,14 @@ namespace dung
             {
                 texturePhase++;
 
+                if (Action == "at" && texturePhase == Textures.Count)
+                {
+                    Action = "id";
+
+                    //1-level recursion
+                    updateTexture(contentManager, true);
+                }
+
                 texturePhase %= Textures.Count;
             }
         }
@@ -152,33 +160,36 @@ namespace dung
 
             var rnd = new Random();
 
-            if (gameWorld.GetDist(X, Y, gameWorld.referenceToHero.X, gameWorld.referenceToHero.Y) <= viewRadius)
+            if (Action != "at")
             {
-                double x1 = X - gameWorld.referenceToHero.X, y1 = Y - gameWorld.referenceToHero.Y;
+                if (gameWorld.GetDist(X, Y, gameWorld.referenceToHero.X, gameWorld.referenceToHero.Y) <= viewRadius)
+                {
+                    double x1 = X - gameWorld.referenceToHero.X, y1 = Y - gameWorld.referenceToHero.Y;
 
-                degDirection = Math.Atan2(y1, x1);
+                    degDirection = Math.Atan2(y1, x1);
 
-                degDirection += (float)Math.PI;
+                    degDirection += (float)Math.PI;
 
-                degDirection %= (float)(Math.PI * 2);
+                    degDirection %= (float)(Math.PI * 2);
 
-                Action = "wa";
-            }
-            else if(gameWorld.GetDist(X, Y, WorkingX, WorkingY) >= speed)
-            {
-                double x1 = X - WorkingX, y1 = Y - WorkingY;
+                    Action = "wa";
+                }
+                else if (gameWorld.GetDist(X, Y, WorkingX, WorkingY) >= speed)
+                {
+                    double x1 = X - WorkingX, y1 = Y - WorkingY;
 
-                degDirection = Math.Atan2(y1, x1);
+                    degDirection = Math.Atan2(y1, x1);
 
-                degDirection += (float)Math.PI;
+                    degDirection += (float)Math.PI;
 
-                degDirection %= (float)(Math.PI * 2);
+                    degDirection %= (float)(Math.PI * 2);
 
-                Action = "wa";
-            }
-            else
-            {
-                Action = "id";
+                    Action = "wa";
+                }
+                else
+                {
+                    Action = "id";
+                }
             }
 
             if (Action == "wa")

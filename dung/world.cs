@@ -86,7 +86,6 @@ namespace dung
 
             referenceToHero = mapObjects[mapObjects.Count - 1];
 
-            
             List<List<int>> fightingRooms = new List<List<int>>();
 
             for (int i = 0; i < ds.rooms.Count; i++)
@@ -105,22 +104,38 @@ namespace dung
                     if (roomDif < 50)
                     {
                         roomDif = 0;
+
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(3, 7), 0);
                     }
                     else if (roomDif < 75)
                     {
                         roomDif = 1;
+
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(5, 10), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(2, 5), 1);
                     }
                     else if(roomDif < 88)
                     {
                         roomDif = 2;
+
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(7, 14), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(4, 7), 1);
                     }
                     else if(roomDif < 96)
                     {
                         roomDif = 3;
+
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(10, 16), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(5, 10), 1);
+                        //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(1, 3), 2);
                     }
                     else
                     {
                         roomDif = 4;
+
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(12, 21), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(7, 14), 1);
+                        //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(2, 5), 2);
                     }
 
                     insertRoomObtaclesAt(contentManager, ds.rooms[i].Item1 - 9, ds.rooms[i].Item2 - 9, 17, 17, "", 7, 5, 12);
@@ -155,13 +170,17 @@ namespace dung
             {
                 l = 1;
 
-                mapObjects[i].Update(contentManager, this, i);
-                
+                if (GetDist(referenceToHero.X, referenceToHero.Y, mapObjects[i].X, mapObjects[i].Y) <= 35)
+                {
+                    mapObjects[i].Update(contentManager, this, i);
+                }
+
                 if(!mapObjects[i].alive)
                 {
                     l = 0;
                     mapObjects.RemoveAt(i);
                 }
+                
             }
         }
 
@@ -194,7 +213,10 @@ namespace dung
                 {
                     l = 0;
 
-                    mapObjects[mapObjectsJ].Draw(spriteBatch, drawx + (int)(mapObjects[mapObjectsJ].X * BlockWidth), drawy + (int)(mapObjects[mapObjectsJ].Y * blockDrawY));
+                    if (GetDist(referenceToHero.X, referenceToHero.Y, mapObjects[mapObjectsJ].X, mapObjects[mapObjectsJ].Y) <= 35)
+                    {
+                        mapObjects[mapObjectsJ].Draw(spriteBatch, drawx + (int)(mapObjects[mapObjectsJ].X * BlockWidth), drawy + (int)(mapObjects[mapObjectsJ].Y * blockDrawY));
+                    }
 
                     mapObjectsJ++;
                 }
