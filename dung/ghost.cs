@@ -40,9 +40,9 @@ namespace dung
             //standart shit
             Action = "id";
 
-            degDirection = 0;
-
             direction = "w";
+
+            degDirection = 0;
 
             timeSinceLastAttack = 0;
 
@@ -87,9 +87,9 @@ namespace dung
             //standart shit
             Action = "id";
 
-            degDirection = 0;
-
             direction = "w";
+
+            degDirection = 0;
 
             timeSinceLastAttack = 0;
 
@@ -123,12 +123,28 @@ namespace dung
 
                 texturePhase = 0;
 
-                Textures.Add(contentManager.Load<Texture2D>("tmpghost"));
+                while (File.Exists("Content/" + Type.ToString() + "mob_" + Action.ToString() + "_" + direction.ToString() + texturePhase.ToString() + ".xnb"))
+                {
+                    Textures.Add(contentManager.Load<Texture2D>(Type.ToString() + "mob_" + Action.ToString() + "_" + direction.ToString() + texturePhase.ToString()));
+
+                    texturePhase++;
+                }
+
+                texturePhase = 0;
+            }
+            else
+            {
+                texturePhase++;
+
+                texturePhase %= Textures.Count;
             }
         }
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
         {
+            string pact = Action;
+            string pdir = direction;
+
             timeSinceLastAttack++;
 
             double px = X;
@@ -206,12 +222,30 @@ namespace dung
 
             if (timeSinceLastAttack >= attackSpeed && tmpdist <= Radius + gameWorld.referenceToHero.Radius)
             {
+                Action = "at";
+
                 timeSinceLastAttack = 0;
 
                 gameWorld.referenceToHero.Attack(1);
             }
 
-            updateTexture(contentManager, false);
+            if (degDirection * 57.2957795>=90&& degDirection * 57.2957795 <= 270)
+            {
+                direction = "s";
+            }
+            else
+            {
+                direction = "w";
+            }
+
+            if (pact == Action && pdir == direction)
+            {
+                updateTexture(contentManager, false);
+            }
+            else
+            {
+                updateTexture(contentManager, true);
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch, int x, int y)

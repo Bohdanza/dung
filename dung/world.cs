@@ -33,7 +33,7 @@ namespace dung
                 sampleBlocks.Add(new Block(i, 0, 0, contentManager));
             }
             
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 2; i++)
             {
                 sampleGhosts.Add(new Ghost(contentManager, i, 0, 0, 0, 0));
             }
@@ -95,7 +95,7 @@ namespace dung
                 {
                     insertRoomObtaclesAt(contentManager, ds.rooms[i].Item1 - 8, ds.rooms[i].Item2 - 8, 17, 17, "", 7, 4, 10);
 
-                    insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(3, 20), 0);
+                    insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(3, 20), 1);
 
                     int tmptype = 0;
 
