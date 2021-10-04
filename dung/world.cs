@@ -46,9 +46,7 @@ namespace dung
             //generating main dungeon
             DungeonSynthesizer ds = new DungeonSynthesizer(contentManager, 480, 480);
 
-            ds.RandomSeeds(175, 256, 30);
-            ds.GenerateCorridors(250, 1000);
-            ds.ReplaceRooms(17, 17);
+            ds.AlternativeGenerate(40, 4, 17);
             ds.PlaceWalls();
 
             List<List<int>> tmplist = ds.GetList();
@@ -201,7 +199,7 @@ namespace dung
             starty = Math.Max(starty, 0);
 
             endx = Math.Min(endx, blocks.Count);
-            endy = Math.Min(endy, blocks[0].Count);
+            endy = Math.Min(endy, blocks[0].Count); 
 
             int mapObjectsJ = 0, l = 1;
 

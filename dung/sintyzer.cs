@@ -16,6 +16,7 @@ namespace dung
         private List<List<int>> mainArray;
         public Texture2D texture;
         public List<Tuple<int, int>> rooms { get; private set; }
+        public List<int> roomsRarity { get; private set; }
 
         public DungeonSynthesizer(ContentManager contentManager, int x, int y)
         {
@@ -180,16 +181,7 @@ namespace dung
             {
                 int xi = rooms[i].Item1, yi = rooms[i].Item2;
 
-                for (int x1 = xi - x / 2; x1 < xi + x / 2; x1++)
-                {
-                    for (int y1 = yi - y / 2; y1 < yi + y / 2; y1++)
-                    {
-                        if (x1 >= 0 && y1 >= 0 && x1 < mainArray.Count && y1 < mainArray[0].Count)
-                        {
-                            mainArray[x1][y1] = 1;
-                        }
-                    }
-                }
+                PlaceSquare(xi - x / 2, yi - y / 2, xi + x / 2, yi + y / 2, 1);
             }
         }
         
@@ -216,6 +208,132 @@ namespace dung
                             }
                         }
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Alternative generation
+        /// </summary>
+        /// <param name="dist">distance between two rooms</param>
+        /// <param name="x">max count of rooms on x</param>
+        /// <param name="y">max count of rooms on y</param>
+        public void AlternativeGenerate(int dist, int maxRoom, int roomSize)
+        {
+            roomsRarity = new List<int>();
+
+            Reset(maxRoom * 2 * dist - dist, maxRoom * 2 * dist - dist);
+
+            var rnd = new Random();
+
+            List<List<int>> rooms = new List<List<int>>();
+
+            for (int i = 0; i < maxRoom * 2 - 1; i++)
+            {
+                List<int> tmplist = new List<int>();
+
+                for (int j = 0; j < maxRoom * 2 - 1; j++)
+                {
+                    tmplist.Add(-1);
+                }
+
+                rooms.Add(tmplist);
+            }
+
+            for (int cr = 0; cr <= maxRoom; cr++)
+            {
+                for (int i = 0 + cr; i < rooms.Count - cr; i++)
+                {
+                    for (int j = 0 + cr; j < rooms[i].Count - cr; j++)
+                    {
+                        rooms[i][j] = cr;
+                    }
+                }
+            }
+
+            int roomsToDelete = (int)(rooms.Count * rooms[0].Count * 0.65);
+
+            for (int z = 0; z < roomsToDelete; z++)
+            {
+                int tmpx = rnd.Next(0, rooms.Count);
+                int tmpy = rnd.Next(0, rooms[0].Count);
+
+                if (rooms[tmpx][tmpy] != maxRoom)
+                {
+                    rooms[tmpx][tmpy] = -1;
+                }
+            }
+
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                for (int j = 0; j < rooms[i].Count; j++)
+                {
+                    if (rooms[i][j] != -1)
+                    {
+                        this.rooms.Add(new Tuple<int, int>(i * dist, j * dist));
+                        this.roomsRarity.Add(rooms[i][j]);
+
+                        mainArray[i * dist][j * dist] = 2;
+                    }
+                }
+            }
+
+            GenerateCorridors(50, 250);
+
+            ReplaceRooms(roomSize, roomSize);
+
+#if DEBUG
+            using (StreamWriter sw = new StreamWriter(new FileStream("log.txt", FileMode.Append), System.Text.Encoding.UTF8))
+            {
+                for (int i = 0; i < rooms.Count; i++)
+                {
+                    for (int j = 0; j < rooms[i].Count; j++)
+                    {
+                        if (rooms[i][j] != -1)
+                        {
+                            sw.Write(rooms[i][j].ToString());
+                        }
+                        else
+                        {
+                            sw.Write(" ");
+                        }
+                    }
+
+                    sw.Write("\n");
+                }
+
+                sw.Write("|\n");
+
+                for (int i = 0; i < mainArray.Count; i++)
+                {
+                    for (int j = 0; j < mainArray[i].Count; j++)
+                    {
+                        if (mainArray[i][j] == 0)
+                        {
+                            sw.Write(" ");
+                        }
+                        else
+                        {
+                            sw.Write(mainArray[i][j].ToString());
+                        }
+                    }
+
+                    sw.Write("\n");
+                }
+            }
+#endif
+        }
+
+        public void PlaceSquare(int x1, int y1, int x2, int y2, int placeType)
+        {
+            int xbegin = Math.Max(0, x1), xend = Math.Min(x2, mainArray.Count);
+            int ybegin = Math.Max(0, y1), yend = Math.Min(y2, mainArray[0].Count);
+
+            for (int i = xbegin; i < xend; i++)
+            {
+                for (int j = ybegin; j < yend; j++)
+                {
+                    mainArray[i][j] = placeType;
                 }
             }
         }
