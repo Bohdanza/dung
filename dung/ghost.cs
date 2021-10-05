@@ -280,5 +280,17 @@ namespace dung
         {
             return "Ghost";
         }
+
+        public override List<string> SaveList()
+        {
+            List<string> tmplist = base.SaveList();
+
+            tmplist.Add(HP.ToString());
+
+            tmplist.Add(WorkingX.ToString());
+            tmplist.Add(WorkingY.ToString());
+
+            return tmplist;
+        }
     }
 }

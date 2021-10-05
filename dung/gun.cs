@@ -135,5 +135,12 @@ namespace dung
         {
             return "Gun";
         }
+
+        public override List<string> SaveList()
+        {
+            List<string> tmplist = base.SaveList();
+
+            return tmplist;
+        }
     }
 }

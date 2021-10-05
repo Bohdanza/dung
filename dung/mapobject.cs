@@ -55,5 +55,17 @@ namespace dung
             X = x;
             Y = y;
         }
+        
+        public virtual List<string> SaveList()
+        {
+            List<string> tmplist = new List<string>();
+
+            tmplist.Add(Type.ToString());
+
+            tmplist.Add(X.ToString());
+            tmplist.Add(X.ToString());
+
+            return tmplist;
+        }
     }
 }

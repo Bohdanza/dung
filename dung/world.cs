@@ -22,6 +22,11 @@ namespace dung
         public List<Ghost> sampleGhosts { get; private set; } = new List<Ghost>();
         public List<Gun> sampleGuns { get; private set; } = new List<Gun>();
 
+
+        /// <summary>
+        /// new world
+        /// </summary>
+        /// <param name="contentManager"></param>
         public GameWorld(ContentManager contentManager)
         {
             darknessEffect = contentManager.Load<Texture2D>("darkness");
@@ -97,32 +102,24 @@ namespace dung
                     //3-8%
                     //4-4%
 
-                    int roomDif = rnd.Next(0, 100);
+                    int roomDif = ds.roomsRarity[i]; 
 
-                    if (roomDif < 50)
+                    if (roomDif == 0)
                     {
-                        roomDif = 0;
-
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(3, 7), 0);
                     }
-                    else if (roomDif < 75)
+                    else if (roomDif == 1)
                     {
-                        roomDif = 1;
-
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(5, 10), 0);
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(2, 5), 1);
                     }
-                    else if(roomDif < 88)
+                    else if(roomDif == 2)
                     {
-                        roomDif = 2;
-
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(7, 14), 0);
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(4, 7), 1);
                     }
-                    else if(roomDif < 96)
+                    else if(roomDif == 3)
                     {
-                        roomDif = 3;
-
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(10, 16), 0);
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(5, 10), 1);
                         //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(1, 3), 2);
@@ -155,7 +152,10 @@ namespace dung
         /// <param name="path"></param>
         public GameWorld(ContentManager contentManager, string path)
         {
-
+            using (StreamReader sr = new StreamReader(path))
+            {
+                
+            }
         }
 
         public void update(ContentManager contentManager)
@@ -411,6 +411,51 @@ namespace dung
             catch
             {
                 //We just dont care
+            }
+        }
+
+        public void Save(string path)
+        {
+            if(!File.Exists(path))
+            {
+                var z = File.Create(path);
+
+                z.Close();
+            }
+            else
+            {
+                File.Delete(path);
+
+                var z = File.Create(path);
+
+                z.Close();
+            }
+
+            using (StreamWriter sw = new StreamWriter(new FileStream(path, FileMode.Append)))
+            {
+                for (int i = 0; i < blocks.Count; i++)
+                {
+                    for (int j = 0; j < blocks[i].Count; j++)
+                    {
+                        sw.Write(blocks[i][j].type);
+                    }
+
+                    sw.Write("♦");
+                }
+
+                sw.WriteLine();
+
+                foreach(var currentObject in mapObjects)
+                {
+                    List<string> tmplist = currentObject.SaveList();
+
+                    sw.WriteLine(currentObject.GetTypeAsString());
+
+                    foreach(var currentString in tmplist)
+                    {
+                        sw.WriteLine(currentString);
+                    }
+                }
             }
         }
     }

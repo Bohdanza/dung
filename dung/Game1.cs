@@ -70,6 +70,11 @@ namespace dung
                 fpsc.Update(gameTime);
             }
 
+            if(!IsActive)
+            {
+                testworld.Save("info/worlds/world1");
+            }
+
             base.Update(gameTime);
         }
 

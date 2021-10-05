@@ -177,5 +177,21 @@ namespace dung
         {
             return "Hero";
         }
+
+        public override List<string> SaveList()
+        {
+            List<string> tmplist = base.SaveList();
+
+            tmplist.Add(HP.ToString());
+
+            List<string> tmpgunlist = GunInHand.SaveList();
+                 
+            foreach(var currentString in tmpgunlist)
+            {
+                tmplist.Add(currentString);
+            }
+            
+            return tmplist;
+        }
     }
 }
