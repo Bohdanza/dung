@@ -152,9 +152,70 @@ namespace dung
         /// <param name="path"></param>
         public GameWorld(ContentManager contentManager, string path)
         {
+            darknessEffect = contentManager.Load<Texture2D>("darkness");
+
+            mapObjects = new List<MapObject>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                sampleBlocks.Add(new Block(i, 0, 0, contentManager));
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                sampleGhosts.Add(new Ghost(contentManager, i, 0, 0, 0, 0));
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                sampleGuns.Add(new Gun(contentManager, i, 0, 0));
+            }
+            
+
+            List<string> read;
+             
             using (StreamReader sr = new StreamReader(path))
             {
-                
+                read = sr.ReadToEnd().Split('\n').ToList();
+            }
+
+            blocks = new List<List<Block>>();
+
+            //for blocks
+            List<string> blockStrList = read[0].Split('♦').ToList();
+
+            for (int i = 0; i < blockStrList.Count; i++)
+            {
+                List<string> realBlocks = blockStrList[i].Split(' ').ToList();
+
+                List<Block> blocksList = new List<Block>();
+
+                int currentYcoord = 0;
+
+                for (int j = 0; j < realBlocks.Count - 1; j += 2)
+                {
+                    int tmpblocktype = Int32.Parse(realBlocks[j + 1]);
+
+                    int tmpblockcount=Int32.Parse(realBlocks[j]);
+                    
+                    for (int k = 0; k < tmpblockcount; k++)
+                    {
+                        blocksList.Add(new Block(tmpblocktype, i, currentYcoord, contentManager, sampleBlocks[tmpblocktype]));
+
+                        currentYcoord++;
+                    }
+                }
+
+                blocks.Add(blocksList);
+            }
+
+            //for objects
+            for (int i = 1; i < read.Count; i++)
+            {
+                if (read[i].Trim('\n').Trim('\r') == "Hero")
+                {
+                    referenceToHero=AddObject(new Hero(contentManager, read, i + 1, sampleGuns));
+                }
             }
         }
 
@@ -184,8 +245,14 @@ namespace dung
 
         public void draw(SpriteBatch spriteBatch, int x, int y)
         {
-            int tmpx = -(int)(referenceToHero.X * BlockWidth);
-            int tmpy = -(int)(referenceToHero.Y * blockDrawY);
+            int tmpx = 0;
+            int tmpy = 0;
+
+            if(referenceToHero!=null)
+            {
+                tmpx = -(int)(referenceToHero.X * BlockWidth);
+                tmpy = -(int)(referenceToHero.Y * blockDrawY);
+            }
 
             int drawx = tmpx + x + 960;
             int drawy = tmpy + y + 540;
@@ -233,8 +300,11 @@ namespace dung
             //effects
             spriteBatch.Draw(darknessEffect, new Vector2(0, 0), Color.White);
 
-            //hero hp, inventory & other
-            ((Hero)referenceToHero).DrawInterface(spriteBatch);
+            if (referenceToHero != null)
+            {
+                //hero hp, inventory & other
+                ((Hero)referenceToHero).DrawInterface(spriteBatch);
+            }
         }
 
         public double GetDist(double x, double y, double x1, double y1)
@@ -305,12 +375,21 @@ namespace dung
 
             return null;
         }
-        
-        public void AddObject(MapObject mapObject)
+       
+        /// <summary>
+        /// Adds object to mapObjects list 
+        /// </summary>
+        /// <param name="mapObject"></param>
+        /// <returns>reference to added object</returns>
+        public MapObject AddObject(MapObject mapObject)
         {
             mapObjects.Add(mapObject);
 
+            MapObject reference = mapObjects[mapObjects.Count - 1];
+
             mapObjects.Sort((a, b) => a.Y.CompareTo(b.Y));
+
+            return reference;
         }
 
         private void insertRoomObtaclesAt(ContentManager contentManager, int x, int y, int xsize, int ysize, string roomType, int maxSize, int minObtacleNumber, int maxObtacleNumber)
@@ -435,9 +514,21 @@ namespace dung
             {
                 for (int i = 0; i < blocks.Count; i++)
                 {
-                    for (int j = 0; j < blocks[i].Count; j++)
+                    int tmpc=1;
+
+                    for (int j = 1; j < blocks[i].Count; j++)
                     {
-                        sw.Write(blocks[i][j].type);
+                        if (blocks[i][j].type == blocks[i][j - 1].type)
+                        {
+                            tmpc++;
+                        }
+                        else
+                        {
+                            sw.Write(tmpc.ToString() + " ");
+                            sw.Write(blocks[i][j - 1].type + " ");
+
+                            tmpc = 1;
+                        }
                     }
 
                     sw.Write("♦");
@@ -448,7 +539,7 @@ namespace dung
                 foreach(var currentObject in mapObjects)
                 {
                     List<string> tmplist = currentObject.SaveList();
-
+                    
                     sw.WriteLine(currentObject.GetTypeAsString());
 
                     foreach(var currentString in tmplist)

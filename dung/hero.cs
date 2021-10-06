@@ -47,6 +47,26 @@ namespace dung
             UpdateTextures(contentManager, true);
         }
 
+        public Hero(ContentManager contentManager, List<string> strList, int beginning, List<Gun> sampleGuns)
+        {
+            Type = Int32.Parse(strList[beginning]);
+
+            X = double.Parse(strList[beginning + 1]);
+            Y = double.Parse(strList[beginning + 2]);
+
+            HP = Int32.Parse(strList[beginning + 3]);
+
+            GunInHand = new Gun(contentManager, strList, beginning + 4, sampleGuns);
+            
+            Radius = 0.5;
+
+            hpHeart = contentManager.Load<Texture2D>("hpheart");
+
+            hpFont = contentManager.Load<SpriteFont>("hpfont");
+
+            UpdateTextures(contentManager, true);
+        }
+
         private void UpdateTextures(ContentManager contentManager, bool reload)
         {
             Textures = new List<Texture2D>();

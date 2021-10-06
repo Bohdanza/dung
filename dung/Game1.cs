@@ -53,7 +53,7 @@ namespace dung
 
             tmpfont = Content.Load<SpriteFont>("mainfont");
 
-            testworld = new GameWorld(Content);
+            testworld = new GameWorld(Content, "info/worlds/world1");
         }
 
         protected override void Update(GameTime gameTime)

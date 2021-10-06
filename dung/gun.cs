@@ -86,6 +86,22 @@ namespace dung
             base.updateTexture(contentManager, true);
         }
 
+        public Gun(ContentManager contentManager, List<string> strList, int beginning, List<Gun> sampleGuns)
+        {
+            Type = Int32.Parse(strList[beginning]);
+
+            X = Int32.Parse(strList[beginning + 1]);
+            Y = Int32.Parse(strList[beginning + 2]);
+
+            FireSpeed = sampleGuns[Type].FireSpeed;
+
+            bulletsShooting = sampleGuns[Type].bulletsShooting;
+
+            rarity = sampleGuns[Type].rarity;
+
+            base.updateTexture(contentManager, true);
+        }
+
         public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
         {
             TimeSinceLastShoot++;
