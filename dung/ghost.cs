@@ -115,6 +115,39 @@ namespace dung
             updateTexture(contentManager, true);
         }
 
+        public Ghost(ContentManager contentManager, List<string> strList, int beginning, List<Ghost> samples)
+        {
+            //standart shit
+            Action = "id";
+
+            direction = "w";
+
+            degDirection = 0;
+
+            timeSinceLastAttack = 0;
+
+            //given shit
+            Type = Int32.Parse(strList[beginning]);
+
+            X = double.Parse(strList[beginning + 1]);
+            Y = double.Parse(strList[beginning + 2]);
+
+            HP = Int32.Parse(strList[beginning + 3]);
+
+            WorkingX = double.Parse(strList[beginning + 4]);
+            WorkingY = double.Parse(strList[beginning + 5]);
+
+            speed = samples[Type].speed;
+
+            Radius = samples[Type].Radius;
+
+            attackSpeed = samples[Type].attackSpeed;
+
+            viewRadius = samples[Type].viewRadius;
+
+            updateTexture(contentManager, true);
+        }
+
         private void updateTexture(ContentManager contentManager, bool reload)
         {
             if (reload)

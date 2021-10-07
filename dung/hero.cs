@@ -23,7 +23,12 @@ namespace dung
         public override double Radius { get; protected set; }
         public override int HP { get; protected set; }
 
-        private Texture2D hpHeart;
+        /// <summary>
+        /// used to avoid hp texture type each time. Try to cut it out, then you'll understand
+        /// </summary>
+        private List<int> HpTextures;
+
+        private List<Texture2D> hpHeartTextures;
         private SpriteFont hpFont;
         public Gun GunInHand;
 
@@ -38,11 +43,20 @@ namespace dung
 
             HP = 3;
 
-            hpHeart = contentManager.Load<Texture2D>("hpheart");
+            hpHeartTextures = new List<Texture2D>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                hpHeartTextures.Add(contentManager.Load<Texture2D>(i.ToString() + "hpheart"));
+            }
 
             hpFont = contentManager.Load<SpriteFont>("hpfont");
 
             GunInHand = new Gun(contentManager, 4, 0, 0);
+
+            HpTextures = new List<int>();
+
+            stabilizeHpList();
 
             UpdateTextures(contentManager, true);
         }
@@ -60,9 +74,18 @@ namespace dung
             
             Radius = 0.5;
 
-            hpHeart = contentManager.Load<Texture2D>("hpheart");
+            hpHeartTextures = new List<Texture2D>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                hpHeartTextures.Add(contentManager.Load<Texture2D>("hpheart" + i.ToString()));
+            }
 
             hpFont = contentManager.Load<SpriteFont>("hpfont");
+
+            HpTextures = new List<int>();
+
+            stabilizeHpList();
 
             UpdateTextures(contentManager, true);
         }
@@ -96,12 +119,12 @@ namespace dung
 
         public void DrawInterface(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < HP; i++)
+            for (int i = 0; i < HpTextures.Count; i++)
             {
-                spriteBatch.Draw(hpHeart, new Vector2((int)(15+i*hpHeart.Width*1.1), 35), Color.White);
+                spriteBatch.Draw(hpHeartTextures[HpTextures[i]], new Vector2((int)(15 + i * hpHeartTextures[HpTextures[i]].Width * 1.1), 35), Color.White);
             }
 
-            spriteBatch.DrawString(hpFont, HP.ToString(), new Vector2(15, (int)(35+hpHeart.Height*1.3)), Color.White);
+            spriteBatch.DrawString(hpFont, HP.ToString(), new Vector2(15, (int)(35 + hpHeartTextures[0].Height * 1.3)), Color.Black);
         }
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
@@ -190,6 +213,23 @@ namespace dung
                 HP = 0;
 
                 alive = false;
+            }
+
+            stabilizeHpList();
+        }
+
+        private void stabilizeHpList()
+        {
+            while (HpTextures.Count > HP)
+            {
+                HpTextures.RemoveAt(HpTextures.Count - 1);
+            }
+
+            var rnd = new Random();
+
+            while (HpTextures.Count < HP)
+            {
+                HpTextures.Add(rnd.Next(0, hpHeartTextures.Count));
             }
         }
 

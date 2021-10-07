@@ -15,13 +15,12 @@ namespace dung
     {
         public List<List<Block>> blocks;
         const int blockDrawY = 64, BlockWidth = 64;
-        private Texture2D darknessEffect;
+        private Texture2D darknessEffect, backgroundTexture;
         private List<MapObject> mapObjects;
         public MapObject referenceToHero { get; private set; }
         public List<Block> sampleBlocks { get; private set; } = new List<Block>();
         public List<Ghost> sampleGhosts { get; private set; } = new List<Ghost>();
         public List<Gun> sampleGuns { get; private set; } = new List<Gun>();
-
 
         /// <summary>
         /// new world
@@ -30,6 +29,7 @@ namespace dung
         public GameWorld(ContentManager contentManager)
         {
             darknessEffect = contentManager.Load<Texture2D>("darkness");
+            backgroundTexture = contentManager.Load<Texture2D>("background1");
 
             mapObjects = new List<MapObject>();
 
@@ -153,6 +153,7 @@ namespace dung
         public GameWorld(ContentManager contentManager, string path)
         {
             darknessEffect = contentManager.Load<Texture2D>("darkness");
+            backgroundTexture = contentManager.Load<Texture2D>("background1");
 
             mapObjects = new List<MapObject>();
 
@@ -170,7 +171,6 @@ namespace dung
             {
                 sampleGuns.Add(new Gun(contentManager, i, 0, 0));
             }
-            
 
             List<string> read;
              
@@ -214,7 +214,11 @@ namespace dung
             {
                 if (read[i].Trim('\n').Trim('\r') == "Hero")
                 {
-                    referenceToHero=AddObject(new Hero(contentManager, read, i + 1, sampleGuns));
+                    referenceToHero = AddObject(new Hero(contentManager, read, i + 1, sampleGuns));
+                }
+                else if (read[i].Trim('\n').Trim('\r') == "Ghost")
+                {
+                    AddObject(new Ghost(contentManager, read, i + 1, sampleGhosts));
                 }
             }
         }
@@ -245,6 +249,8 @@ namespace dung
 
         public void draw(SpriteBatch spriteBatch, int x, int y)
         {
+            spriteBatch.Draw(backgroundTexture, new Vector2(0, 0), Color.White);
+
             int tmpx = 0;
             int tmpy = 0;
 
@@ -298,7 +304,7 @@ namespace dung
             }
 
             //effects
-            spriteBatch.Draw(darknessEffect, new Vector2(0, 0), Color.White);
+            //spriteBatch.Draw(darknessEffect, new Vector2(0, 0), Color.White);
 
             if (referenceToHero != null)
             {
@@ -530,6 +536,9 @@ namespace dung
                             tmpc = 1;
                         }
                     }
+
+                    sw.Write(tmpc.ToString() + " ");
+                    sw.Write(blocks[i][blocks[i].Count - 1].type + " ");
 
                     sw.Write("♦");
                 }

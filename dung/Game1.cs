@@ -50,10 +50,10 @@ namespace dung
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+                
             tmpfont = Content.Load<SpriteFont>("mainfont");
 
-            testworld = new GameWorld(Content, "info/worlds/world1");
+            testworld = new GameWorld(Content/*, "info/worlds/world1"*/);
         }
 
         protected override void Update(GameTime gameTime)
