@@ -119,9 +119,13 @@ namespace dung
 
         public void DrawInterface(SpriteBatch spriteBatch)
         {
+            int cx=15;
+
             for (int i = 0; i < HpTextures.Count; i++)
             {
-                spriteBatch.Draw(hpHeartTextures[HpTextures[i]], new Vector2((int)(15 + i * hpHeartTextures[HpTextures[i]].Width * 1.1), 35), Color.White);
+                spriteBatch.Draw(hpHeartTextures[HpTextures[i]], new Vector2(cx, 35), Color.White);
+
+                cx += (int)(hpHeartTextures[HpTextures[i]].Width * 1.1);
             }
 
             spriteBatch.DrawString(hpFont, HP.ToString(), new Vector2(15, (int)(35 + hpHeartTextures[0].Height * 1.3)), Color.Black);

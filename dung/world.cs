@@ -79,7 +79,7 @@ namespace dung
             {
                 int tmpi = rnd.Next(0, ds.rooms.Count);
 
-                if(!specialRooms.Contains(tmpi))
+                if (!specialRooms.Contains(tmpi) && ds.roomsRarity[tmpi] == 0)
                 {
                     specialRooms.Add(tmpi);
                 }
@@ -95,13 +95,6 @@ namespace dung
             {
                 if(!specialRooms.Contains(i))
                 {
-                    //rarity:
-                    //0-50%
-                    //1-25%
-                    //2-13%
-                    //3-8%
-                    //4-4%
-
                     int roomDif = ds.roomsRarity[i]; 
 
                     if (roomDif == 0)
@@ -134,8 +127,6 @@ namespace dung
                     }
 
                     insertRoomObtaclesAt(contentManager, ds.rooms[i].Item1 - 9, ds.rooms[i].Item2 - 9, 17, 17, "", 7, 5, 12);
-
-                    insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(3, 20), 1);
 
                     int tmptype = 0;
 
@@ -265,6 +256,8 @@ namespace dung
 
             int startx = drawx / blocks[0][0].textures[0].Width, endx = startx * -1 + 1920 / blocks[0][0].textures[0].Width, starty = drawy / blockDrawY, endy = starty * -1 + 1080 / blockDrawY + 1;
 
+            endx++;
+
             startx *= -1;
             starty *= -1;
 
@@ -276,6 +269,7 @@ namespace dung
 
             int mapObjectsJ = 0, l = 1;
 
+            //main loop
             for (int j = starty; j < endy; j += l)
             {
                 l = 1;
@@ -284,7 +278,7 @@ namespace dung
                 {
                     l = 0;
 
-                    if (GetDist(referenceToHero.X, referenceToHero.Y, mapObjects[mapObjectsJ].X, mapObjects[mapObjectsJ].Y) <= 35)
+                    if (GetDist(referenceToHero.X, referenceToHero.Y, mapObjects[mapObjectsJ].X, mapObjects[mapObjectsJ].Y) <= 40)
                     {
                         mapObjects[mapObjectsJ].Draw(spriteBatch, drawx + (int)(mapObjects[mapObjectsJ].X * BlockWidth), drawy + (int)(mapObjects[mapObjectsJ].Y * blockDrawY));
                     }

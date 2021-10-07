@@ -222,7 +222,7 @@ namespace dung
         {
             roomsRarity = new List<int>();
 
-            Reset(maxRoom * 2 * dist - dist, maxRoom * 2 * dist - dist);
+            Reset(maxRoom * 2 * dist - dist + roomSize / 2, maxRoom * 2 * dist - dist + roomSize / 2);
 
             var rnd = new Random();
 
@@ -270,10 +270,10 @@ namespace dung
                 {
                     if (rooms[i][j] != -1)
                     {
-                        this.rooms.Add(new Tuple<int, int>(i * dist, j * dist));
+                        this.rooms.Add(new Tuple<int, int>(i * dist + roomSize / 2, j * dist + roomSize / 2));
                         this.roomsRarity.Add(rooms[i][j]);
 
-                        mainArray[i * dist][j * dist] = 2;
+                        mainArray[i * dist + roomSize / 2][j * dist + roomSize / 2] = 2;
                     }
                 }
             }
