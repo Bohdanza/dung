@@ -14,7 +14,7 @@ namespace dung
     public class GameWorld
     {
         public List<List<Block>> blocks;
-        const int blockDrawY = 64, BlockWidth = 64;
+        public const int blockDrawY = 64, BlockWidth = 64;
         private Texture2D darknessEffect, backgroundTexture;
         private List<MapObject> mapObjects;
         public MapObject referenceToHero { get; private set; }
@@ -104,17 +104,17 @@ namespace dung
                     else if (roomDif == 1)
                     {
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(5, 10), 0);
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(2, 5), 1);
+                       // insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(2, 5), 1);
                     }
                     else if(roomDif == 2)
                     {
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(7, 14), 0);
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(4, 7), 1);
+                       // insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(4, 7), 1);
                     }
                     else if(roomDif == 3)
                     {
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(10, 16), 0);
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(5, 10), 1);
+                      //  insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(5, 10), 1);
                         //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(1, 3), 2);
                     }
                     else
@@ -122,7 +122,7 @@ namespace dung
                         roomDif = 4;
 
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(12, 21), 0);
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(7, 14), 1);
+                      //  insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(7, 14), 1);
                         //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(2, 5), 2);
                     }
 

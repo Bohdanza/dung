@@ -188,7 +188,7 @@ namespace dung
             {
                 if (GunInHand.TimeSinceLastShoot >= GunInHand.FireSpeed)
                 {
-                    double tmpdir = Math.Atan2(540 - mouseState.Y, 960 - mouseState.X);
+                    double tmpdir = Math.Atan2(540 - Textures[texturesPhase].Height * 0.1 - mouseState.Y, 960 - mouseState.X);
 
                     tmpdir += (float)Math.PI;
 

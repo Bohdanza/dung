@@ -22,6 +22,7 @@ namespace dung
         public override string Action { get; protected set; }
         private string direction;
         private double degDirection, speed;
+        private string pact = "id";
 
         private int texturePhase, timeSinceLastAttack, attackSpeed;
         public override double Radius { get; protected set; }
@@ -169,12 +170,17 @@ namespace dung
             {
                 texturePhase++;
 
-                if (Action == "at" && texturePhase == Textures.Count)
+                if ((Action == "at" || Action == "dm") && texturePhase == Textures.Count)
                 {
                     Action = "id";
 
                     //1-level recursion
                     updateTexture(contentManager, true);
+                }
+
+                if (Action == "di" && texturePhase == Textures.Count)
+                {
+                    alive = false;
                 }
 
                 texturePhase %= Textures.Count;
@@ -183,7 +189,6 @@ namespace dung
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
         {
-            string pact = Action;
             string pdir = direction;
 
             timeSinceLastAttack++;
@@ -193,7 +198,7 @@ namespace dung
 
             var rnd = new Random();
 
-            if (Action != "at")
+            if (Action != "at" && Action != "di" && Action != "dm")
             {
                 if (gameWorld.GetDist(X, Y, gameWorld.referenceToHero.X, gameWorld.referenceToHero.Y) <= viewRadius)
                 {
@@ -264,13 +269,16 @@ namespace dung
 
             double tmpdist = gameWorld.GetDist(X, Y, gameWorld.referenceToHero.X, gameWorld.referenceToHero.Y);
 
-            if (timeSinceLastAttack >= attackSpeed && tmpdist <= Radius + gameWorld.referenceToHero.Radius)
+            if (Action != "di" && Action != "dm")
             {
-                Action = "at";
+                if (timeSinceLastAttack >= attackSpeed && tmpdist <= Radius + gameWorld.referenceToHero.Radius)
+                {
+                    Action = "at";
 
-                timeSinceLastAttack = 0;
+                    timeSinceLastAttack = 0;
 
-                gameWorld.referenceToHero.Attack(1);
+                    gameWorld.referenceToHero.Attack(1);
+                }
             }
 
             if (degDirection * 57.2957795 >= 0 && degDirection * 57.2957795 <= 180)
@@ -290,10 +298,17 @@ namespace dung
             {
                 updateTexture(contentManager, true);
             }
+
+            pact = Action;
         }
 
         public override void Draw(SpriteBatch spriteBatch, int x, int y)
         {
+            if (Action == "di")
+            {
+                int debug = 1;
+            }
+
             spriteBatch.Draw(Textures[texturePhase], new Vector2(x - Textures[texturePhase].Width / 2, y - Textures[texturePhase].Height), Color.White);
         }
 
@@ -301,11 +316,16 @@ namespace dung
         {
             HP -= strenght;
 
+            if (strenght > 0)
+            {
+                Action = "dm";
+            }
+
             if (HP <= 0)
             {
                 HP = 0;
 
-                alive = false;
+                Action = "di";
             }
         }
 
