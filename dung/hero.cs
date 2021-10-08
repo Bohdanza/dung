@@ -52,7 +52,7 @@ namespace dung
 
             hpFont = contentManager.Load<SpriteFont>("hpfont");
 
-            GunInHand = new Gun(contentManager, 4, 0, 0);
+            GunInHand = new Gun(contentManager, 0, 0, 0);
 
             HpTextures = new List<int>();
 
