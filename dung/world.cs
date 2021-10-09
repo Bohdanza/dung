@@ -24,13 +24,16 @@ namespace dung
         public List<Ghost> sampleGhosts { get; private set; } = new List<Ghost>();
         public List<Gun> sampleGuns { get; private set; } = new List<Gun>();
         private SoundEffect backgroundSong;
- 
+        private Texture2D cursor;
+
         /// <summary>
         /// new world
         /// </summary>
         /// <param name="contentManager"></param>
         public GameWorld(ContentManager contentManager)
         {
+            cursor = contentManager.Load<Texture2D>("cursor");
+
             backgroundSong = contentManager.Load<SoundEffect>("background_music0");
 
             darknessEffect = contentManager.Load<Texture2D>("darkness");
@@ -56,7 +59,7 @@ namespace dung
             //generating main dungeon
             DungeonSynthesizer ds = new DungeonSynthesizer(contentManager, 480, 480);
 
-            ds.AlternativeGenerate(40, 4, 17);
+            ds.AlternativeGenerate(30, 4, 12);
             ds.PlaceWalls();
 
             List<List<int>> tmplist = ds.GetList();
@@ -100,37 +103,37 @@ namespace dung
             {
                 if(!specialRooms.Contains(i))
                 {
-                    insertRoomObtaclesAt(contentManager, ds.rooms[i].Item1 - 9, ds.rooms[i].Item2 - 9, 17, 17, "", 7, 5, 12);
+                    insertRoomObtaclesAt(contentManager, ds.rooms[i].Item1 - 7, ds.rooms[i].Item2 - 7, 12, 12, "", 7, 5, 12);
 
                     int roomDif = ds.roomsRarity[i]; 
 
                     if (roomDif == 0)
                     {
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(3, 7), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(3, 7), 0);
                     }
                     else if (roomDif == 1)
                     {
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(5, 10), 0);
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(2, 5), 1);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(5, 10), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(2, 5), 1);
                     }
                     else if(roomDif == 2)
                     {
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(7, 14), 0);
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(4, 7), 1);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(7, 14), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(4, 7), 1);
                     }
                     else if(roomDif == 3)
                     {
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(10, 16), 0);
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(5, 10), 1);
-                        //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(1, 3), 2);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(10, 16), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(5, 10), 1);
+                        //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(1, 3), 2);
                     }
                     else
                     {
                         roomDif = 4;
 
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(12, 21), 0);
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(7, 14), 1);
-                        //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 17, 17, rnd.Next(2, 5), 2);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(12, 21), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(7, 14), 1);
+                        //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(2, 5), 2);
                     }
 
                     int tmptype = 0;
@@ -157,7 +160,7 @@ namespace dung
             SoundEffectInstance soundEffectInstance = backgroundSong.CreateInstance();
 
             soundEffectInstance.IsLooped = true;
-            soundEffectInstance.Volume = 0.7f;
+            soundEffectInstance.Volume = 0.3f;
 
             soundEffectInstance.Play();
         }
@@ -170,6 +173,8 @@ namespace dung
         /// <param name="path"></param>
         public GameWorld(ContentManager contentManager, string path)
         {
+            cursor = contentManager.Load<Texture2D>("cursor");
+
             backgroundSong = contentManager.Load<SoundEffect>("background_music0");
 
             darknessEffect = contentManager.Load<Texture2D>("darkness");
@@ -276,7 +281,7 @@ namespace dung
 
         public void draw(SpriteBatch spriteBatch, int x, int y)
         {
-            spriteBatch.Draw(backgroundTexture, new Vector2(0, 0), Color.White);
+            //spriteBatch.Draw(backgroundTexture, new Vector2(0, 0), Color.White);
 
             int tmpx = 0;
             int tmpy = 0;
@@ -334,7 +339,12 @@ namespace dung
             }
 
             //effects
-            //spriteBatch.Draw(darknessEffect, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(darknessEffect, new Vector2(0, 0), Color.White);
+
+            var mouseState = Mouse.GetState();
+
+            //drawing cursor
+            spriteBatch.Draw(cursor, new Vector2(mouseState.X - cursor.Width / 2, mouseState.Y - cursor.Height / 2), Color.White);
 
             if (referenceToHero != null)
             {
@@ -481,7 +491,7 @@ namespace dung
                 double tmpx = x + rnd.NextDouble() * xsize;
                 double tmpy = y + rnd.NextDouble() * ysize;
 
-                if (blocks[(int)tmpx][(int)tmpy].passable)
+                if ((int)tmpx >= 0 && (int)tmpy >= 0 && (int)tmpx < blocks.Count && (int)tmpy < blocks[(int)tmpx].Count && blocks[(int)tmpx][(int)tmpy].passable)
                 {
                     AddObject(new Ghost(contentManager, type, tmpx, tmpy, tmpx, tmpy, sampleGhosts[type]));
 
@@ -500,7 +510,7 @@ namespace dung
                 double tmpx = x + rnd.NextDouble() * xsize;
                 double tmpy = y + rnd.NextDouble() * ysize;
 
-                if (blocks[(int)tmpx][(int)tmpy].passable)
+                if ((int)tmpx >= 0 && (int)tmpy >= 0 && (int)tmpx < blocks.Count && (int)tmpy < blocks[(int)tmpx].Count && blocks[(int)tmpx][(int)tmpy].passable)
                 {
                     AddObject(new Gun(contentManager, type, tmpx, tmpy, sampleGuns[type]));
 

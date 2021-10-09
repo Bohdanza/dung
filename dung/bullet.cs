@@ -134,7 +134,7 @@ namespace dung
 
         public override void Draw(SpriteBatch spriteBatch, int x, int y)
         {
-            spriteBatch.Draw(Textures[texturesPhase], new Vector2(x - Textures[texturesPhase].Width / 2, y - Textures[texturesPhase].Height / 2), Color.White);
+            spriteBatch.Draw(Textures[texturesPhase], new Vector2(x - Textures[texturesPhase].Width / 2, y - Textures[texturesPhase].Height), Color.White);
         }
 
         public override string GetTypeAsString()

@@ -108,7 +108,7 @@ namespace dung
 
             var mouseState = Mouse.GetState();
 
-            double tmpdir = Math.Atan2(540 - mouseState.Y, 960 - mouseState.X);
+            double tmpdir = Math.Atan2(540 - (int)(Textures[texturesPhase].Height * 0.1) - mouseState.Y, 960 - mouseState.X);
 
             tmpdir += 3f * (float)Math.PI;
 
@@ -128,7 +128,7 @@ namespace dung
                 cx += (int)(hpHeartTextures[HpTextures[i]].Width * 1.1);
             }
 
-            spriteBatch.DrawString(hpFont, HP.ToString(), new Vector2(15, (int)(35 + hpHeartTextures[0].Height * 1.3)), Color.Black);
+            spriteBatch.DrawString(hpFont, HP.ToString(), new Vector2(15, (int)(35 + hpHeartTextures[0].Height * 1.3)), Color.White);
         }
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
@@ -183,18 +183,18 @@ namespace dung
             GunInHand.Update(contentManager, gameWorld, myIndex);
 
             var mouseState = Mouse.GetState();
-
+            
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
                 if (GunInHand.TimeSinceLastShoot >= GunInHand.FireSpeed)
                 {
-                    double tmpdir = Math.Atan2(540 - Textures[texturesPhase].Height * 0.1 - mouseState.Y, 960 - mouseState.X);
+                    double tmpdir = Math.Atan2(540 - (int)(Textures[texturesPhase].Height * 0.1) - mouseState.Y, 960 - mouseState.X);
 
                     tmpdir += (float)Math.PI;
 
                     tmpdir %= (float)(Math.PI * 2);
 
-                    GunInHand.ShootInDirection(gameWorld, contentManager, X, Y, tmpdir, Radius);
+                    GunInHand.ShootInDirection(gameWorld, contentManager, X, Y - ((double)Textures[texturesPhase].Height * 0.1 / GameWorld.blockDrawY), tmpdir, Radius);
                 }
             }
 
