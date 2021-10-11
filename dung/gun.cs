@@ -104,7 +104,10 @@ namespace dung
 
         public override void Update(ContentManager contentManager, GameWorld gameWorld, int myIndex)
         {
-            TimeSinceLastShoot++;
+            if (TimeSinceLastShoot < FireSpeed)
+            {
+                TimeSinceLastShoot++;
+            }
 
             base.Update(contentManager, gameWorld, myIndex);
         }

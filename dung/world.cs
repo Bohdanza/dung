@@ -32,6 +32,8 @@ namespace dung
         /// <param name="contentManager"></param>
         public GameWorld(ContentManager contentManager)
         {
+            var rnd = new Random();
+
             cursor = contentManager.Load<Texture2D>("cursor");
 
             backgroundSong = contentManager.Load<SoundEffect>("background_music0");
@@ -41,7 +43,7 @@ namespace dung
 
             mapObjects = new List<MapObject>();
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 sampleBlocks.Add(new Block(i, 0, 0, contentManager));
             }
@@ -51,7 +53,7 @@ namespace dung
                 sampleGhosts.Add(new Ghost(contentManager, i, 0, 0, 0, 0));
             }
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 8; i++)
             {
                 sampleGuns.Add(new Gun(contentManager, i, 0, 0));
             }
@@ -72,6 +74,16 @@ namespace dung
 
                 for (int j = 0; j < tmplist[i].Count; j++)
                 {
+                    if (tmplist[i][j] == 1)
+                    {
+                        int vr = rnd.Next(0, 10);
+                        
+                        if(vr==0)
+                        {
+                            tmplist[i][j] = 3;
+                        }
+                    }
+
                     tmpblock.Add(new Block(tmplist[i][j], i, j, contentManager, sampleBlocks[tmplist[i][j]]));
                 }
 
@@ -80,8 +92,6 @@ namespace dung
 
             //generating mobs, loot etc.
             List<int> specialRooms = new List<int>();
-
-            var rnd = new Random();
 
             while(specialRooms.Count<2)
             {
@@ -109,21 +119,21 @@ namespace dung
 
                     if (roomDif == 0)
                     {
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(3, 7), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(3, 5), 0);
                     }
                     else if (roomDif == 1)
                     {
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(5, 10), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(5, 8), 0);
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(2, 5), 1);
                     }
                     else if(roomDif == 2)
                     {
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(7, 14), 0);
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(4, 7), 1);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(8, 12), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(5, 8), 1);
                     }
                     else if(roomDif == 3)
                     {
-                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(10, 16), 0);
+                        insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(11, 16), 0);
                         insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(5, 10), 1);
                         //insertMobs(contentManager, ds.rooms[i].Item1, ds.rooms[i].Item2, 12, 12, rnd.Next(1, 3), 2);
                     }
@@ -182,7 +192,7 @@ namespace dung
 
             mapObjects = new List<MapObject>();
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 sampleBlocks.Add(new Block(i, 0, 0, contentManager));
             }
@@ -192,7 +202,7 @@ namespace dung
                 sampleGhosts.Add(new Ghost(contentManager, i, 0, 0, 0, 0));
             }
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 8; i++)
             {
                 sampleGuns.Add(new Gun(contentManager, i, 0, 0));
             }

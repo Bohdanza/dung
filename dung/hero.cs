@@ -28,6 +28,8 @@ namespace dung
         /// </summary>
         private List<int> HpTextures;
 
+        private Texture2D reloadTexture;
+
         private List<Texture2D> hpHeartTextures;
         private SpriteFont hpFont;
         public Gun GunInHand;
@@ -44,7 +46,7 @@ namespace dung
             HP = 3;
 
             hpHeartTextures = new List<Texture2D>();
-
+            
             for (int i = 0; i < 5; i++)
             {
                 hpHeartTextures.Add(contentManager.Load<Texture2D>(i.ToString() + "hpheart"));
@@ -52,7 +54,9 @@ namespace dung
 
             hpFont = contentManager.Load<SpriteFont>("hpfont");
 
-            GunInHand = new Gun(contentManager, 0, 0, 0);
+            reloadTexture = contentManager.Load<Texture2D>("reloadfull");
+
+            GunInHand = new Gun(contentManager, 6, 0, 0);
 
             HpTextures = new List<int>();
 
@@ -114,12 +118,21 @@ namespace dung
 
             tmpdir %= (float)(Math.PI * 2);
 
-            GunInHand.Draw(spriteBatch, x, y - (int)(Textures[texturesPhase].Height * 0.1), tmpdir);
+            GunInHand.Draw(spriteBatch, x, y - (int)(Textures[texturesPhase].Height * 0.05), tmpdir);
+
+            if (GunInHand.TimeSinceLastShoot < GunInHand.FireSpeed)
+            {
+                spriteBatch.Draw(reloadTexture, new Vector2(x - reloadTexture.Width / 2, (int)(y - Textures[texturesPhase].Height - reloadTexture.Height * 1.2)), Color.White);
+
+                spriteBatch.Draw(reloadTexture,
+                new Vector2(x - reloadTexture.Width / 2, (int)(y - Textures[texturesPhase].Height - reloadTexture.Height * 1.2)),
+                new Rectangle(0, 0, (int)(reloadTexture.Width * (double)GunInHand.TimeSinceLastShoot / GunInHand.FireSpeed), reloadTexture.Height), Color.White);
+            }   
         }
 
         public void DrawInterface(SpriteBatch spriteBatch)
         {
-            int cx=15;
+            int cx = 15;
 
             for (int i = 0; i < HpTextures.Count; i++)
             {

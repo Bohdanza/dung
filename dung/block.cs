@@ -13,9 +13,9 @@ namespace dung
 {
     public class Block
     {
-        public int x { get; private set; }
-        public int y { get; private set; }
-        public int type { get; private set; }
+        public virtual int x { get; private set; }
+        public virtual int y { get; private set; }
+        public virtual int type { get; private set; }
         public List<Texture2D> textures { get; private set; }
         private int texturePhase;
         public bool passable { get; private set; }
@@ -90,12 +90,12 @@ namespace dung
             }
         }
 
-        public void update(ContentManager contentManager)
+        public virtual void update(ContentManager contentManager)
         {
             updateTexture(contentManager, false);
         }
 
-        public void draw(SpriteBatch spriteBatch, int x, int y)
+        public virtual void draw(SpriteBatch spriteBatch, int x, int y)
         {
             spriteBatch.Draw(textures[texturePhase], new Vector2(x, y), Color.White);
         }

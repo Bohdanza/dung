@@ -24,6 +24,8 @@ namespace dung
         public double speed { get; protected set; }
         private int texturesPhase;
         public override bool alive { get; protected set; }
+        public int beatFromWalls { get; protected set; }
+        public int maxBeatFromWalls { get; protected set; }
 
         /// <summary>
         /// With file reading
@@ -34,6 +36,8 @@ namespace dung
         /// <param name="y"></param>
         public Bullet(ContentManager contentManager, int type, double x, double y, double directon)
         {
+            beatFromWalls = 0;
+
             alive = true;
 
             //given shit
@@ -48,12 +52,14 @@ namespace dung
             using (StreamReader sr = new StreamReader("info/global/bullets/" + Type.ToString() + "/m.info"))
             {
                 List<string> tmplist = sr.ReadToEnd().Split('\n').ToList();
-                   
+                
                 damage = Int32.Parse(tmplist[0]);
 
                 Radius = double.Parse(tmplist[1]);
 
                 speed = double.Parse(tmplist[2]);
+
+                maxBeatFromWalls = Int32.Parse(tmplist[3]);
             }
 
             UpdateTexture(contentManager, true);
@@ -61,6 +67,8 @@ namespace dung
 
         public Bullet(ContentManager contentManager, int type, double x, double y, double directon, Bullet sampleBullet)
         {
+            beatFromWalls = 0;
+
             alive = true;
 
             Type = type;
@@ -73,6 +81,8 @@ namespace dung
             damage = sampleBullet.damage;
             Radius = sampleBullet.Radius;
             speed = sampleBullet.speed;
+
+            maxBeatFromWalls = sampleBullet.maxBeatFromWalls;
 
             UpdateTexture(contentManager, true);
         }
@@ -113,7 +123,18 @@ namespace dung
             {
                 if (X < 0 || Y < 0 || X >= gameWorld.blocks.Count || Y >= gameWorld.blocks[(int)X].Count || !gameWorld.blocks[(int)X][(int)Y].passable)
                 {
-                    alive = false;
+                    beatFromWalls++;
+
+                    //~100 degrees in radians
+                    degDirection += 1.745;
+
+                    X = px;
+                    Y = py;
+
+                    if (beatFromWalls > maxBeatFromWalls)
+                    {
+                        alive = false;
+                    }
                 }
             }
             else
