@@ -61,7 +61,7 @@ namespace dung
             //generating main dungeon
             DungeonSynthesizer ds = new DungeonSynthesizer(contentManager, 480, 480);
 
-            ds.AlternativeGenerate(30, 4, 12);
+            ds.AlternativeGenerate(30, 5, 12);
             ds.PlaceWalls();
 
             List<List<int>> tmplist = ds.GetList();

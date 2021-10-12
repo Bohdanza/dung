@@ -19,6 +19,7 @@ namespace dung
         private GameWorld testworld;
         private SimpleFps fpsc = new SimpleFps();
         private SpriteFont tmpfont;
+        private DungeonSynthesizer dungeonSynthesizer;
 
         public Game1()
         {
@@ -53,7 +54,11 @@ namespace dung
                 
             tmpfont = Content.Load<SpriteFont>("mainfont");
 
-            testworld = new GameWorld(Content/*, "info/worlds/world1"*/);
+            dungeonSynthesizer = new DungeonSynthesizer(Content, 0, 0);
+            
+            dungeonSynthesizer.AlternativeGenerate(30, 4, 12);
+            dungeonSynthesizer.PlaceWalls();
+            //testworld = new GameWorld(Content/*, "info/worlds/world1"*/);
         }
 
         protected override void Update(GameTime gameTime)
@@ -61,7 +66,7 @@ namespace dung
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            testworld.update(Content);
+            //testworld.update(Content);
 
             KeyboardState ks = Keyboard.GetState();
 
@@ -72,7 +77,7 @@ namespace dung
 
             if(!IsActive)
             {
-                testworld.Save("info/worlds/world1");
+                //testworld.Save("info/worlds/world1");
             }
 
             base.Update(gameTime);
@@ -84,8 +89,8 @@ namespace dung
 
             _spriteBatch.Begin();
 
-            testworld.draw(_spriteBatch, tmpx, tmpy);
-
+            //testworld.draw(_spriteBatch, tmpx, tmpy);
+            dungeonSynthesizer.Visualize(_spriteBatch, 0, 0, 1, 1);
 
             KeyboardState ks = Keyboard.GetState();
 

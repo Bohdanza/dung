@@ -125,8 +125,16 @@ namespace dung
                 {
                     beatFromWalls++;
 
-                    //~100 degrees in radians
-                    degDirection += 1.745;
+                    if (Math.Abs(py - Y) <= Math.Abs(px - X))
+                    {
+                        degDirection = Math.PI - degDirection;
+                    }
+                    else
+                    {
+                        degDirection = Math.PI * 2 - degDirection;
+                    }
+
+                    degDirection %= Math.PI;
 
                     X = px;
                     Y = py;

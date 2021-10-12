@@ -56,7 +56,7 @@ namespace dung
 
             reloadTexture = contentManager.Load<Texture2D>("reloadfull");
 
-            GunInHand = new Gun(contentManager, 6, 0, 0);
+            GunInHand = new Gun(contentManager, 0, 0, 0);
 
             HpTextures = new List<int>();
 

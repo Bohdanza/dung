@@ -281,7 +281,7 @@ namespace dung
             for (int i = 0; i <= maxRoom; i++)
             {
                 int tmpx1 = i * dist + roomSize / 2;
-                int tmpx2 = (maxRoom * 2 - 1 - i) * dist + roomSize / 2;
+                int tmpx2 = (maxRoom * 2 - 2 - i) * dist + roomSize / 2;
 
                 PlaceSquare(tmpx1, tmpx1, tmpx1 + 1, tmpx2 + 1, 1);
                 PlaceSquare(tmpx1, tmpx1, tmpx2 + 1, tmpx1 + 1, 1);
@@ -292,7 +292,8 @@ namespace dung
             int tmpx11 = roomSize / 2;
             int tmpx12 = rooms.Count / 2 * dist + roomSize / 2;
 
-            PlaceSquare(tmpx11, tmpx12, tmpx12+1, tmpx12 + 1, 1);
+            PlaceSquare(tmpx11, tmpx12, tmpx12*2+1, tmpx12 + 1, 1);
+            PlaceSquare(tmpx12, tmpx11, tmpx12 + 1, tmpx12*2 + 1, 1);
 
             ReplaceRooms(roomSize, roomSize);
         }
